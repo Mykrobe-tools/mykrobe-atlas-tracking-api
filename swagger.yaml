@@ -161,7 +161,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
-      description: Delete a sample based on a sample ID.
+      description: Delete a file with {md5sum} associated with a sample with {id}.
       parameters:
         - name: id
           in: path
@@ -250,6 +250,214 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /samples/{id}/events/{eventId}:
+    get:
+      description: Return an event with {eventId} associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      description: Delete an event with {eventId} associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Deleted
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/qc-result:
+    get:
+      description: Return the QC result associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QcResult'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      description: Add or replace new QC result associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri for the QC result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QcResult'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/status:
+    get:
+      description: Return the status associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      description: Add or replace new status associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri for the status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      description: Update status associated with a sample with new data.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     File:
@@ -270,6 +478,13 @@ components:
             - vcf
     Event:
       type: object
+      required:
+        - name
+        - software
+        - software-version
+        - start-time
+        - duration
+        - command
       properties:
         name:
           type: string
@@ -278,6 +493,8 @@ components:
             - QC
             - variant-calling
             - prediction
+            - bigsi-building
+            - distance-calculation
         software:
           type: string
         software-version:
@@ -289,6 +506,52 @@ components:
           format: int32
         command:
           type: string
+    QcResult:
+      type: object
+      required:
+        - coverage
+        - tbc
+        - decision
+      properties:
+        coverage:
+          type: integer
+          format: int32
+        tbc:
+          type: string
+        decision:
+          type: string
+          enum:
+            - pass
+            - fail
+    Status:
+      type: object
+      required:
+        - de-contamination
+        - qc
+        - variant-calling
+        - prediction
+        - bigsi-building
+        - distance-calculation
+      properties:
+        de-contamination:
+          $ref: '#/components/schemas/ProcessingStatus'
+        qc:
+          $ref: '#/components/schemas/ProcessingStatus'
+        variant-calling:
+          $ref: '#/components/schemas/ProcessingStatus'
+        prediction:
+          $ref: '#/components/schemas/ProcessingStatus'
+        bigsi-building:
+          $ref: '#/components/schemas/ProcessingStatus'
+        distance-calculation:
+          $ref: '#/components/schemas/ProcessingStatus'
+    ProcessingStatus:
+      type: string
+      enum:
+        - pending
+        - started
+        - failed
+        - complete
     Error:
       type: object
       required:
