@@ -3,7 +3,21 @@ info:
   title: Tracking API
   version: 1.0.0
   description:
-    <p>An API for CRUD of sample tracking information
+    <p>An API for CRUD of sample tracking information for Mykrobe Atlas project
+
+    <p>This API is intended to satisfy the following user stories
+      <li> Atlas user wants to know the sample status so that I can know if specific results are available
+      <li> Atlas user wants to know QC results for a sample so that I can know if a specific sample has passed QC check
+      <li> Atlas user wants to deprecate a sample so that it is no longer available from the Atlas system
+      <li> sample ingestion service wants to know if a sample already exists so that I can decide on rejecting a sample
+      <li> sample ingestion service wants to know if a file already exists so that I can know if this is a new file
+      <li> sample ingestion service wants to add a new sample for tracking so that It can know if the sample is accepted
+      <li> sample processing service wants to add a processing event for a new sample so that the sample can be auditted
+      <li> sampel processing service wants to add QC results for a new sample so that other user can know if the new
+          sample passes the QC check
+      <li> sampel processing service wants to update sample status so that they are up to date
+      <li> sampel processing service wants to update sample's QC results so that they are up to date
+      <li> audit user wants to know all the processing events for a sample so that I can know what happened to a sample
 servers:
   - url: http://tracking-api-service/api/v1
 paths:
