@@ -545,6 +545,13 @@ components:
           $ref: '#/components/schemas/ProcessingStatus'
         distance-calculation:
           $ref: '#/components/schemas/ProcessingStatus'
+        stage:
+          type: string
+          enum:
+            - accepted
+            - qc-failed
+            - live
+            - deprecated
     ProcessingStatus:
       type: string
       enum:
