@@ -9,6 +9,8 @@ servers:
 paths:
   /files/{md5sum}:
     get:
+      tags:
+        - file
       description: Return a file based on a file md5sum.
       parameters:
         - name: md5sum
@@ -37,6 +39,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /samples/{id}:
     head:
+      tags:
+        - sample
       description: Return if a sample with {id} exists.
       parameters:
           - name: id
@@ -61,6 +65,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /samples/{id}/files:
     get:
+      tags:
+        - file
       description: Return a list of files associated with a sample.
       parameters:
         - name: id
@@ -90,6 +96,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
+      tags:
+        - file
       description: Add a new file to be associated with a sample.
       parameters:
         - name: id
@@ -129,6 +137,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /samples/{id}/files/{md5sum}:
     get:
+      tags:
+        - file
       description: Return a file with {md5sum} associated with a sample with {id}.
       parameters:
         - name: id
@@ -161,6 +171,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - file
       description: Delete a file with {md5sum} associated with a sample with {id}.
       parameters:
         - name: id
@@ -190,6 +202,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /samples/{id}/events:
     get:
+      tags:
+        - event
       description: Return a list of events associated with a sample.
       parameters:
         - name: id
@@ -219,6 +233,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
+      tags:
+        - event
       description: Add a new event to be associated with a sample.
       parameters:
         - name: id
@@ -252,6 +268,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /samples/{id}/events/{eventId}:
     get:
+      tags:
+        - event
       description: Return an event with {eventId} associated with a sample with {id}.
       parameters:
         - name: id
@@ -284,6 +302,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     delete:
+      tags:
+        - event
       description: Delete an event with {eventId} associated with a sample with {id}.
       parameters:
         - name: id
@@ -313,6 +333,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /samples/{id}/qc-result:
     get:
+      tags:
+        - qc_result
       description: Return the QC result associated with a sample.
       parameters:
         - name: id
@@ -340,6 +362,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - qc_result
       description: Add or replace new QC result associated with a sample.
       parameters:
         - name: id
@@ -373,6 +397,8 @@ paths:
                 $ref: '#/components/schemas/Error'
   /samples/{id}/status:
     get:
+      tags:
+        - sample_status
       description: Return the status associated with a sample.
       parameters:
         - name: id
@@ -400,6 +426,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     put:
+      tags:
+        - sample_status
       description: Add or replace new status associated with a sample.
       parameters:
         - name: id
@@ -432,6 +460,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     patch:
+      tags:
+        - sample_status
       description: Update status associated with a sample with new data.
       parameters:
         - name: id
