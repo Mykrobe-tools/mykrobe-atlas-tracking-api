@@ -119,6 +119,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: File to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
       responses:
         201:
           description: Created
@@ -256,6 +263,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: Event to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
       responses:
         201:
           description: Created
@@ -385,6 +399,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: QC result to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QcResult'
       responses:
         200:
           description: OK
@@ -474,6 +495,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: Status to be added.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
       responses:
         200:
           description: OK
@@ -508,6 +536,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: Status to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
       responses:
         200:
           description: OK
