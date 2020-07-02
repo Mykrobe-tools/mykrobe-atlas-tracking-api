@@ -1,0 +1,666 @@
+openapi: 3.0.1
+info:
+  title: Tracking API
+  version: 1.0.0
+  description:
+    <p>An API for CRUD of sample tracking information for Mykrobe Atlas project
+
+    <p>This API is intended to satisfy the following user stories
+      <li> Atlas user wants to know the sample status so that I can know if specific results are available
+      <li> Atlas user wants to know QC results for a sample so that I can know if a specific sample has passed QC check
+      <li> Atlas user wants to deprecate a sample so that it is no longer available from the Atlas system
+      <li> sample ingestion service wants to know if a sample already exists so that I can decide on rejecting a sample
+      <li> sample ingestion service wants to know if a file already exists so that I can know if this is a new file
+      <li> sample ingestion service wants to add a new sample for tracking so that It can know if the sample is accepted
+      <li> sample processing service wants to add a processing event for a new sample so that the sample can be auditted
+      <li> sampel processing service wants to add QC results for a new sample so that other user can know if the new
+          sample passes the QC check
+      <li> sampel processing service wants to update sample status so that they are up to date
+      <li> sampel processing service wants to update sample's QC results so that they are up to date
+      <li> audit user wants to know all the processing events for a sample so that I can know what happened to a sample
+servers:
+  - url: http://tracking-api-service/api/v1
+paths:
+  /files/{md5sum}:
+    get:
+      tags:
+        - file
+      description: Return a file based on a file md5sum.
+      parameters:
+        - name: md5sum
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}:
+    head:
+      tags:
+        - sample
+      description: Return if a sample with {id} exists.
+      parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              type: string
+      responses:
+        204:
+          description: OK
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/files:
+    get:
+      tags:
+        - file
+      description: Return a list of files associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - file
+      description: Add a new file to be associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri for the newly added file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Already existed (with same md5sum)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/files/{md5sum}:
+    get:
+      tags:
+        - file
+      description: Return a file with {md5sum} associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: md5sum
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - file
+      description: Delete a file with {md5sum} associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: md5sum
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Deleted
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/events:
+    get:
+      tags:
+        - event
+      description: Return a list of events associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - event
+      description: Add a new event to be associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        201:
+          description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri for the newly added event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/events/{eventId}:
+    get:
+      tags:
+        - event
+      description: Return an event with {eventId} associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - event
+      description: Delete an event with {eventId} associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Deleted
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/qc-result:
+    get:
+      tags:
+        - qc_result
+      description: Return the QC result associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QcResult'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - qc_result
+      description: Add or replace new QC result associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri for the QC result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QcResult'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - qc_result
+      description: Delete the QC result associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Deleted
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /samples/{id}/status:
+    get:
+      tags:
+        - sample_status
+      description: Return the status associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - sample_status
+      description: Add or replace new status associated with a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri for the status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - sample_status
+      description: Update status associated with a sample with new data.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        404:
+          description: Not found (sample not found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - sample_status
+      description: Delete the status associated with a sample with {id}.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: Deleted
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    File:
+      type: object
+      required:
+        - md5sum
+        - filename
+        - file-type
+      properties:
+        md5sum:
+          type: string
+        filename:
+          type: string
+        file-type:
+          type: string
+          enum:
+            - fastq
+            - vcf
+    Event:
+      type: object
+      required:
+        - name
+        - software
+        - software-version
+        - start-time
+        - duration
+        - command
+      properties:
+        name:
+          type: string
+          enum:
+            - de-contamination
+            - QC
+            - variant-calling
+            - prediction
+            - bigsi-building
+            - distance-calculation
+        software:
+          type: string
+        software-version:
+          type: string
+        start-time:
+          type: number
+        duration:
+          type: integer
+          format: int32
+        command:
+          type: string
+    QcResult:
+      type: object
+      required:
+        - coverage
+        - tbc
+        - decision
+      properties:
+        coverage:
+          type: integer
+          format: int32
+        tbc:
+          type: string
+        decision:
+          type: string
+          enum:
+            - pass
+            - fail
+    Status:
+      type: object
+      required:
+        - de-contamination
+        - qc
+        - variant-calling
+        - prediction
+        - bigsi-building
+        - distance-calculation
+      properties:
+        de-contamination:
+          $ref: '#/components/schemas/ProcessingStatus'
+        qc:
+          $ref: '#/components/schemas/ProcessingStatus'
+        variant-calling:
+          $ref: '#/components/schemas/ProcessingStatus'
+        prediction:
+          $ref: '#/components/schemas/ProcessingStatus'
+        bigsi-building:
+          $ref: '#/components/schemas/ProcessingStatus'
+        distance-calculation:
+          $ref: '#/components/schemas/ProcessingStatus'
+        stage:
+          type: string
+          enum:
+            - accepted
+            - qc-failed
+            - live
+            - deprecated
+    ProcessingStatus:
+      type: string
+      enum:
+        - pending
+        - started
+        - failed
+        - complete
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
