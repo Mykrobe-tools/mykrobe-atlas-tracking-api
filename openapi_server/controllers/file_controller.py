@@ -2,7 +2,6 @@ import connexion
 import six
 
 from openapi_server.models.error import Error  # noqa: E501
-java.io.File  # noqa: E501
 from openapi_server import util
 
 
@@ -11,7 +10,7 @@ def files_md5sum_get(md5sum):  # noqa: E501
 
     Return a file based on a file md5sum. # noqa: E501
 
-    :param md5sum: 
+    :param md5sum:
     :type md5sum: str
 
     :rtype: File
@@ -24,7 +23,7 @@ def samples_id_files_get(id):  # noqa: E501
 
     Return a list of files associated with a sample. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
 
     :rtype: List[File]
@@ -37,9 +36,9 @@ def samples_id_files_md5sum_delete(id, md5sum):  # noqa: E501
 
     Delete a file with {md5sum} associated with a sample with {id}. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
-    :param md5sum: 
+    :param md5sum:
     :type md5sum: str
 
     :rtype: None
@@ -52,9 +51,9 @@ def samples_id_files_md5sum_get(id, md5sum):  # noqa: E501
 
     Return a file with {md5sum} associated with a sample with {id}. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
-    :param md5sum: 
+    :param md5sum:
     :type md5sum: str
 
     :rtype: File
@@ -67,7 +66,7 @@ def samples_id_files_post(id):  # noqa: E501
 
     Add a new file to be associated with a sample. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
 
     :rtype: File
