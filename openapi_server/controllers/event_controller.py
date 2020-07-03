@@ -4,6 +4,7 @@ import six
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.event import Event  # noqa: E501
 from openapi_server import util
+from openapi_server.orm import Sample
 
 
 def samples_id_events_event_id_delete(id, event_id):  # noqa: E501
@@ -11,9 +12,9 @@ def samples_id_events_event_id_delete(id, event_id):  # noqa: E501
 
     Delete an event with {eventId} associated with a sample with {id}. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
-    :param event_id: 
+    :param event_id:
     :type event_id: str
 
     :rtype: None
@@ -26,9 +27,9 @@ def samples_id_events_event_id_get(id, event_id):  # noqa: E501
 
     Return an event with {eventId} associated with a sample with {id}. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
-    :param event_id: 
+    :param event_id:
     :type event_id: str
 
     :rtype: Event
@@ -41,7 +42,7 @@ def samples_id_events_get(id):  # noqa: E501
 
     Return a list of events associated with a sample. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
 
     :rtype: List[Event]
@@ -49,12 +50,12 @@ def samples_id_events_get(id):  # noqa: E501
     return 'do some magic!'
 
 
-def samples_id_events_post(id, event):  # noqa: E501
+def samples_id_events_post(id, event=None):  # noqa: E501
     """samples_id_events_post
 
     Add a new event to be associated with a sample. # noqa: E501
 
-    :param id: 
+    :param id:
     :type id: str
     :param event: Event to be added
     :type event: dict | bytes
@@ -63,4 +64,9 @@ def samples_id_events_post(id, event):  # noqa: E501
     """
     if connexion.request.is_json:
         event = Event.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    sample = Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    return 'do some magic!', 201
