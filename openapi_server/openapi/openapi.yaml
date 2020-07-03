@@ -119,6 +119,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+        description: Event to be added
+        required: true
       responses:
         "201":
           content:
@@ -272,6 +279,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        description: File to be added
+        required: true
       responses:
         "201":
           content:
@@ -458,6 +472,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QcResult'
+        description: QC result to be added
+        required: true
       responses:
         "200":
           content:
@@ -561,6 +582,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+        description: Status to be added
+        required: true
       responses:
         "200":
           content:
@@ -594,6 +622,13 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+        description: Status to be added.
+        required: true
       responses:
         "200":
           content:

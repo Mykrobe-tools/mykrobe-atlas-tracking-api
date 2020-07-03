@@ -61,14 +61,18 @@ def samples_id_files_md5sum_get(id, md5sum):  # noqa: E501
     return 'do some magic!'
 
 
-def samples_id_files_post(id):  # noqa: E501
+def samples_id_files_post(id, file):  # noqa: E501
     """samples_id_files_post
 
     Add a new file to be associated with a sample. # noqa: E501
 
     :param id:
     :type id: str
+    :param file: File to be added
+    :type file: dict | bytes
 
     :rtype: File
     """
+    if connexion.request.is_json:
+        file = File.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'

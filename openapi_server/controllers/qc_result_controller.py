@@ -32,14 +32,18 @@ def samples_id_qc_result_get(id):  # noqa: E501
     return 'do some magic!'
 
 
-def samples_id_qc_result_put(id):  # noqa: E501
+def samples_id_qc_result_put(id, qc_result):  # noqa: E501
     """samples_id_qc_result_put
 
     Add or replace new QC result associated with a sample. # noqa: E501
 
     :param id: 
     :type id: str
+    :param qc_result: QC result to be added
+    :type qc_result: dict | bytes
 
     :rtype: QcResult
     """
+    if connexion.request.is_json:
+        qc_result = QcResult.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'

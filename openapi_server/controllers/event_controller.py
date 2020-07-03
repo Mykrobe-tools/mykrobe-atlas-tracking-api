@@ -49,14 +49,18 @@ def samples_id_events_get(id):  # noqa: E501
     return 'do some magic!'
 
 
-def samples_id_events_post(id):  # noqa: E501
+def samples_id_events_post(id, event):  # noqa: E501
     """samples_id_events_post
 
     Add a new event to be associated with a sample. # noqa: E501
 
     :param id: 
     :type id: str
+    :param event: Event to be added
+    :type event: dict | bytes
 
     :rtype: Event
     """
+    if connexion.request.is_json:
+        event = Event.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'

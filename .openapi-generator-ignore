@@ -31,3 +31,6 @@
 /.travis.yml
 /README.md
 /tox.ini
+
+/openapi_server/__main__.py
+/openapi_server/test
