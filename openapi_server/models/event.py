@@ -15,9 +15,11 @@ class Event(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, name=None, software=None, software_version=None, start_time=None, duration=None, command=None):  # noqa: E501
+    def __init__(self, id=None, name=None, software=None, software_version=None, start_time=None, duration=None, command=None):  # noqa: E501
         """Event - a model defined in OpenAPI
 
+        :param id: The id of this Event.  # noqa: E501
+        :type id: int
         :param name: The name of this Event.  # noqa: E501
         :type name: str
         :param software: The software of this Event.  # noqa: E501
@@ -32,6 +34,7 @@ class Event(Model):
         :type command: str
         """
         self.openapi_types = {
+            'id': int,
             'name': str,
             'software': str,
             'software_version': str,
@@ -41,6 +44,7 @@ class Event(Model):
         }
 
         self.attribute_map = {
+            'id': 'id',
             'name': 'name',
             'software': 'software',
             'software_version': 'software-version',
@@ -49,6 +53,7 @@ class Event(Model):
             'command': 'command'
         }
 
+        self._id = id
         self._name = name
         self._software = software
         self._software_version = software_version
@@ -66,6 +71,27 @@ class Event(Model):
         :rtype: Event
         """
         return util.deserialize_model(dikt, cls)
+
+    @property
+    def id(self):
+        """Gets the id of this Event.
+
+
+        :return: The id of this Event.
+        :rtype: int
+        """
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        """Sets the id of this Event.
+
+
+        :param id: The id of this Event.
+        :type id: int
+        """
+
+        self._id = id
 
     @property
     def name(self):

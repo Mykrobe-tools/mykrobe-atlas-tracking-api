@@ -682,13 +682,16 @@ components:
       type: object
     Event:
       example:
-        duration: 6
+        duration: 1
         software-version: software-version
-        start-time: 0.8008281904610115
+        start-time: 6.027456183070403
         software: software
         name: de-contamination
+        id: 0
         command: command
       properties:
+        id:
+          type: integer
         name:
           enum:
           - de-contamination

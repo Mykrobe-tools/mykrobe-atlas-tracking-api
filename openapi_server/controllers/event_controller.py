@@ -1,10 +1,8 @@
 import connexion
-import six
 
+from openapi_server import orm
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.event import Event  # noqa: E501
-from openapi_server import util
-from openapi_server.orm import Sample
 
 
 def samples_id_events_event_id_delete(id, event_id):  # noqa: E501
@@ -22,7 +20,7 @@ def samples_id_events_event_id_delete(id, event_id):  # noqa: E501
     return 'do some magic!'
 
 
-def samples_id_events_event_id_get(id, event_id):  # noqa: E501
+def samples_id_events_event_id_get(id, eventId):  # noqa: E501
     """samples_id_events_event_id_get
 
     Return an event with {eventId} associated with a sample with {id}. # noqa: E501
@@ -34,7 +32,10 @@ def samples_id_events_event_id_get(id, event_id):  # noqa: E501
 
     :rtype: Event
     """
-    return 'do some magic!'
+
+    event = orm.Event.query.get(eventId)
+
+    return event.to_model(), 200
 
 
 def samples_id_events_get(id):  # noqa: E501
@@ -65,8 +66,10 @@ def samples_id_events_post(id, event=None):  # noqa: E501
     if connexion.request.is_json:
         event = Event.from_dict(connexion.request.get_json())  # noqa: E501
 
-    sample = Sample.query.get(id)
+    sample = orm.Sample.query.get(id)
     if not sample:
         return Error(404, 'Not found'), 404
 
-    return 'do some magic!', 201
+    created = orm.Event.create(event)
+
+    return created.to_model(), 201

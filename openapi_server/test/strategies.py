@@ -3,6 +3,10 @@ from hypothesis.strategies import composite, text, integers, floats, sampled_fro
 from openapi_server.models import Event
 
 
+def int64s():
+    return integers(min_value=-2**63, max_value=2**63-1)
+
+
 def sample_ids():
     return text(alphabet=characters(whitelist_categories=('L', 'N')), min_size=1)
 
@@ -11,7 +15,7 @@ def sample_ids():
 def events(draw):
     return Event(
         command=draw(text()),
-        duration=draw(integers()),
+        duration=draw(int64s()),
         name=draw(sampled_from(['de-contamination', 'QC', 'variant-calling', 'prediction', 'bigsi-building', 'distance-calculation'])),
         software=draw(text()),
         software_version=draw(text()),

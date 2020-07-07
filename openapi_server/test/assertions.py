@@ -1,10 +1,22 @@
-def assert_resource_created(response, requested_resource, many=False):
-    assert response.status_code == 201, response.data.decode()
+import math
 
-    resource_class = type(requested_resource)
-    if not many:
-        responded_resource = resource_class.from_dict(response.json)
+from pytest import approx
+
+
+def assert_float_representations_equal(a, b):
+    if not a or math.isnan(a):
+        assert not b or math.isnan(b)
+    elif not b or math.isnan(b):
+        assert not a or math.isnan(a)
     else:
-        responded_resource = [resource_class.from_dict(x) for x in response.json]
+        assert a == approx(b)
 
-    assert responded_resource == requested_resource
+
+def assert_equal_events(a, b):
+    assert a.id == b.id
+    assert a.command == b.command
+    assert a.duration == b.duration
+    assert a.name == b.name
+    assert a.software == b.software
+    assert a.software_version == b.software_version
+    assert_float_representations_equal(a.start_time, b.start_time)
