@@ -15,21 +15,23 @@ class CRUDMixin:
 
         return inst
 
+
+class APIModelMixin:
     @classmethod
     def from_model(cls, model: Model) -> db.Model:
-        attrs = {k: getattr(model, k) for k in cls.api_model_props()}
-        return cls(**attrs)
+        props = {p: getattr(model, p) for p in cls.api_model_properties()}
+        return cls(**props)
 
     def to_model(self) -> Model:
-        attrs = {k: getattr(self, k) for k in self.api_model_props()}
-        return self.api_model(**attrs)
+        props = {p: getattr(self, p) for p in self.api_model_properties()}
+        return self.api_model_class(**props)
 
     @classmethod
-    def api_model_props(cls):
-        return [p for p in dir(cls.api_model) if isinstance(getattr(cls.api_model, p), property)]
+    def api_model_properties(cls):
+        return [p for p in dir(cls.api_model_class) if isinstance(getattr(cls.api_model_class, p), property)]
 
 
-class Event(CRUDMixin, db.Model):
+class Event(CRUDMixin, APIModelMixin, db.Model):
     id = Column(Integer, primary_key=True)
     command = Column(String)
     duration = Column(Integer)
@@ -38,7 +40,7 @@ class Event(CRUDMixin, db.Model):
     software_version = Column(String)
     start_time = Column(Float)
 
-    api_model = models.Event
+    api_model_class = models.Event
 
 
 class Sample(db.Model):
