@@ -25,16 +25,26 @@ def client():
 
 
 @fixture
-def create_event(client):
-    def _(sample_id, event):
-        return client.post(f'/api/v1/samples/{sample_id}/events', json=event)
+def make_request(client):
+    def _(path, method, json=None, ensure=False, success_code=200):
+        response = client.open(path=path, method=method, json=json)
+        if ensure:
+            assert response.status_code == success_code
+        return response
     return _
 
 
 @fixture
-def get_event(client):
-    def _(sample_id, event_id):
-        return client.get(f'/api/v1/samples/{sample_id}/events/{event_id}')
+def create_event(make_request):
+    def _(sample_id, event, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/events', 'POST', json=event, success_code=201, *args, **kwargs)
+    return _
+
+
+@fixture
+def get_event(make_request):
+    def _(sample_id, event_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/events/{event_id}', 'GET', *args, **kwargs)
     return _
 
 
@@ -43,5 +53,14 @@ def create_sample():
     def _(sample_id):
         sample = Sample(id=sample_id)
         db.session.add(sample)
+        db.session.commit()
+    return _
+
+
+@fixture
+def delete_sample():
+    def _(sample_id):
+        sample = Sample.query.get(sample_id)
+        db.session.delete(sample)
         db.session.commit()
     return _

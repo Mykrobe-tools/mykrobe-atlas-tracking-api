@@ -12,8 +12,10 @@ def sample_ids():
 
 
 @composite
-def events(draw):
+def events(draw, without_id=False):
+    event_id = None if without_id else draw(int64s())
     return Event(
+        id=event_id,
         command=draw(text()),
         duration=draw(int64s()),
         name=draw(sampled_from(['de-contamination', 'QC', 'variant-calling', 'prediction', 'bigsi-building', 'distance-calculation'])),

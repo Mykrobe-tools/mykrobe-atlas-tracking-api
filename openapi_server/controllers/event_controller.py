@@ -33,7 +33,12 @@ def samples_id_events_event_id_get(id, eventId):  # noqa: E501
     :rtype: Event
     """
 
+    if not orm.Sample.query.get(id):
+        return Error(404, 'Not found'), 404
+
     event = orm.Event.query.get(eventId)
+    if not event:
+        return Error(404, 'Not found'), 404
 
     return event.to_model(), 200
 
