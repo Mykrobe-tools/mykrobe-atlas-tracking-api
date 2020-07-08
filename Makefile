@@ -11,4 +11,4 @@ test:
 	pytest
 
 clean:
-	docker system prune -f --volume
+	docker system prune -f --volumes
