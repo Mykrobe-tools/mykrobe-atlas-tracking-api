@@ -5,18 +5,6 @@ from openapi_server.db import db
 from openapi_server.models.base_model_ import Model
 
 
-# class CRUDMixin:
-#     @classmethod
-#     def create(cls, model: Model) -> db.Model:
-#         inst = cls.from_model(model)
-#         inst.create()
-#         return inst
-#
-#     def create(self):
-#         db.session.add(self)
-#         db.session.commit()
-
-
 class APIModelMixin:
     @classmethod
     def from_model(cls, model: Model) -> db.Model:
