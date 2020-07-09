@@ -35,6 +35,13 @@ def make_request(client):
 
 
 @fixture
+def list_event(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/events', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_event(make_request):
     def _(sample_id, event, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/events', 'POST', json=event, success_code=201, *args, **kwargs)

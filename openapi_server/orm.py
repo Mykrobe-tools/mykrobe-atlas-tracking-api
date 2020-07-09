@@ -1,19 +1,20 @@
-from sqlalchemy import Column, String, Integer, Float
+from sqlalchemy import Column, String, Integer, Float, ForeignKey
 
 from openapi_server import models
 from openapi_server.db import db
 from openapi_server.models.base_model_ import Model
 
 
-class CRUDMixin:
-    @classmethod
-    def create(cls, model: Model) -> db.Model:
-        inst = cls.from_model(model)
-
-        db.session.add(inst)
-        db.session.commit()
-
-        return inst
+# class CRUDMixin:
+#     @classmethod
+#     def create(cls, model: Model) -> db.Model:
+#         inst = cls.from_model(model)
+#         inst.create()
+#         return inst
+#
+#     def create(self):
+#         db.session.add(self)
+#         db.session.commit()
 
 
 class APIModelMixin:
@@ -31,7 +32,7 @@ class APIModelMixin:
         return [p for p in dir(cls.api_model_class) if isinstance(getattr(cls.api_model_class, p), property)]
 
 
-class Event(CRUDMixin, APIModelMixin, db.Model):
+class Event(APIModelMixin, db.Model):
     id = Column(Integer, primary_key=True)
     command = Column(String)
     duration = Column(Integer)
@@ -40,8 +41,11 @@ class Event(CRUDMixin, APIModelMixin, db.Model):
     software_version = Column(String)
     start_time = Column(Float)
 
+    sample_id = Column(String, ForeignKey('sample.id'))
+
     api_model_class = models.Event
 
 
 class Sample(db.Model):
     id = Column(String, primary_key=True)
+    events = db.relationship(Event, backref='sample')

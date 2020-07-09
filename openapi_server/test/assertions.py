@@ -2,6 +2,8 @@ import math
 
 from pytest import approx
 
+from openapi_server.models import Event
+
 
 def assert_float_representations_equal(a, b):
     if not a or math.isnan(a):
@@ -10,6 +12,16 @@ def assert_float_representations_equal(a, b):
         assert not a or math.isnan(a)
     else:
         assert a == approx(b)
+
+
+def assert_equal_lists(a, b):
+    assert len(a) == len(b)
+    for x in a:
+        if isinstance(x, Event):
+            xb = [y for y in b if y.id == x.id][0]
+            assert_equal_events(x, xb)
+        else:
+            assert x in b
 
 
 def assert_equal_events(a, b):

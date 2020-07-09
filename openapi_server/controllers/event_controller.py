@@ -1,6 +1,7 @@
 import connexion
 
 from openapi_server import orm
+from openapi_server.db import db
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.event import Event  # noqa: E501
 
@@ -33,10 +34,11 @@ def samples_id_events_event_id_get(id, eventId):  # noqa: E501
     :rtype: Event
     """
 
-    if not orm.Sample.query.get(id):
+    sample = orm.Sample.query.get(id)
+    if not sample:
         return Error(404, 'Not found'), 404
 
-    event = orm.Event.query.get(eventId)
+    event = orm.Event.query.with_parent(sample).filter_by(id=eventId).first()
     if not event:
         return Error(404, 'Not found'), 404
 
@@ -53,7 +55,14 @@ def samples_id_events_get(id):  # noqa: E501
 
     :rtype: List[Event]
     """
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    events = [x.to_model() for x in sample.events]
+
+    return events, 200
 
 
 def samples_id_events_post(id, event=None):  # noqa: E501
@@ -75,6 +84,10 @@ def samples_id_events_post(id, event=None):  # noqa: E501
     if not sample:
         return Error(404, 'Not found'), 404
 
-    created = orm.Event.create(event)
+    inst = orm.Event.from_model(event)
+    inst.sample_id = sample.id
 
-    return created.to_model(), 201
+    db.session.add(inst)
+    db.session.commit()
+
+    return inst.to_model(), 201
