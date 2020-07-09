@@ -6,7 +6,7 @@ from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.event import Event  # noqa: E501
 
 
-def samples_id_events_event_id_delete(id, event_id):  # noqa: E501
+def samples_id_events_event_id_delete(id, eventId):  # noqa: E501
     """samples_id_events_event_id_delete
 
     Delete an event with {eventId} associated with a sample with {id}. # noqa: E501
@@ -18,8 +18,19 @@ def samples_id_events_event_id_delete(id, event_id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
 
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    event = orm.Event.query.with_parent(sample).filter_by(id=eventId).first()
+    if not event:
+        return Error(404, 'Not found'), 404
+
+    db.session.delete(event)
+    db.session.commit()
+
+    return '', 204
 
 def samples_id_events_event_id_get(id, eventId):  # noqa: E501
     """samples_id_events_event_id_get

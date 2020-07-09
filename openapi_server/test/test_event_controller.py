@@ -90,3 +90,35 @@ def test_getting_events(sample_id, event, get_event, create_event, create_sample
 
         created = Event.from_dict(response.json)
         assert_equal_events(created, event)
+
+
+@given(sample_id=sample_ids(), event=events())
+def test_deleting_events_of_non_existent_samples(sample_id, event, delete_event, create_event, create_sample, delete_sample):
+    with managed_db():
+        create_sample(sample_id)
+        create_event(sample_id, event, ensure=True)
+        delete_sample(sample_id)
+
+        response = delete_event(sample_id, event.id)
+        assert response.status_code == 404
+
+
+@given(sample_id=sample_ids(), event=events())
+def test_deleting_non_existent_events(sample_id, event, delete_event, create_sample):
+    with managed_db():
+        create_sample(sample_id)
+        response = delete_event(sample_id, event.id)
+        assert response.status_code == 404
+
+
+@given(sample_id=sample_ids(), event=events())
+def test_deleting_events(sample_id, event, delete_event, create_event, create_sample, get_event):
+    with managed_db():
+        create_sample(sample_id)
+        create_event(sample_id, event, ensure=True)
+
+        response = delete_event(sample_id, event.id)
+        assert response.status_code == 204
+
+        response = get_event(sample_id, event.id)
+        assert response.status_code == 404

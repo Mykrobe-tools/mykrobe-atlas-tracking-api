@@ -56,6 +56,13 @@ def get_event(make_request):
 
 
 @fixture
+def delete_event(make_request):
+    def _(sample_id, event_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/events/{event_id}', 'DELETE', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample():
     def _(sample_id):
         sample = Sample(id=sample_id)
