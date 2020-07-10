@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 
 import connexion
 
@@ -10,7 +11,7 @@ def main():
     app = connexion.App(__name__, specification_dir='./openapi/')
     app.app.json_encoder = encoder.JSONEncoder
 
-    app.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+    app.app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     db.init_app(app.app)
     db.app = app.app
 

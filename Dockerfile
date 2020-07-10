@@ -7,4 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+ENV SQLALCHEMY_DATABASE_URI "sqlite://"
+
 CMD [ "python", "-m", "openapi_server" ]
