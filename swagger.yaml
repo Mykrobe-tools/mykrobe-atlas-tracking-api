@@ -615,6 +615,8 @@ components:
         - duration
         - command
       properties:
+        id:
+          type: integer
         name:
           type: string
           enum:

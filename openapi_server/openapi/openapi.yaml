@@ -1,0 +1,792 @@
+openapi: 3.0.1
+info:
+  description: |-
+    <p>An API for CRUD of sample tracking information for Mykrobe Atlas project
+    <p>This API is intended to satisfy the following user stories <li> Atlas user wants to know the sample status so that I can know if specific results are available <li> Atlas user wants to know QC results for a sample so that I can know if a specific sample has passed QC check <li> Atlas user wants to deprecate a sample so that it is no longer available from the Atlas system <li> sample ingestion service wants to know if a sample already exists so that I can decide on rejecting a sample <li> sample ingestion service wants to know if a file already exists so that I can know if this is a new file <li> sample ingestion service wants to add a new sample for tracking so that It can know if the sample is accepted <li> sample processing service wants to add a processing event for a new sample so that the sample can be auditted <li> sampel processing service wants to add QC results for a new sample so that other user can know if the new sample passes the QC check <li> sampel processing service wants to update sample status so that they are up to date <li> sampel processing service wants to update sample's QC results so that they are up to date <li> audit user wants to know all the processing events for a sample so that I can know what happened to a sample
+  title: Tracking API
+  version: 1.0.0
+servers:
+- url: http://tracking-api-service/api/v1
+paths:
+  /files/{md5sum}:
+    get:
+      description: Return a file based on a file md5sum.
+      operationId: files_md5sum_get
+      parameters:
+      - explode: false
+        in: path
+        name: md5sum
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
+  /samples/{id}:
+    head:
+      description: Return if a sample with {id} exists.
+      operationId: samples_id_head
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample
+      x-openapi-router-controller: openapi_server.controllers.sample_controller
+  /samples/{id}/events:
+    get:
+      description: Return a list of events associated with a sample.
+      operationId: samples_id_events_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Event'
+                type: array
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - event
+      x-openapi-router-controller: openapi_server.controllers.event_controller
+    post:
+      description: Add a new event to be associated with a sample.
+      operationId: samples_id_events_post
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+        description: Event to be added
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: Created
+          headers:
+            Location:
+              description: uri for the newly added event
+              explode: false
+              schema:
+                type: string
+              style: simple
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found (sample not found)
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - event
+      x-openapi-router-controller: openapi_server.controllers.event_controller
+  /samples/{id}/events/{eventId}:
+    delete:
+      description: Delete an event with {eventId} associated with a sample with {id}.
+      operationId: samples_id_events_event_id_delete
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: eventId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - event
+      x-openapi-router-controller: openapi_server.controllers.event_controller
+    get:
+      description: Return an event with {eventId} associated with a sample with {id}.
+      operationId: samples_id_events_event_id_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: eventId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - event
+      x-openapi-router-controller: openapi_server.controllers.event_controller
+  /samples/{id}/files:
+    get:
+      description: Return a list of files associated with a sample.
+      operationId: samples_id_files_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/File'
+                type: array
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
+    post:
+      description: Add a new file to be associated with a sample.
+      operationId: samples_id_files_post
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/File'
+        description: File to be added
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: Created
+          headers:
+            Location:
+              description: uri for the newly added file
+              explode: false
+              schema:
+                type: string
+              style: simple
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found (sample not found)
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Already existed (with same md5sum)
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
+  /samples/{id}/files/{md5sum}:
+    delete:
+      description: Delete a file with {md5sum} associated with a sample with {id}.
+      operationId: samples_id_files_md5sum_delete
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: md5sum
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
+    get:
+      description: Return a file with {md5sum} associated with a sample with {id}.
+      operationId: samples_id_files_md5sum_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: md5sum
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - file
+      x-openapi-router-controller: openapi_server.controllers.file_controller
+  /samples/{id}/qc-result:
+    delete:
+      description: Delete the QC result associated with a sample with {id}.
+      operationId: samples_id_qc_result_delete
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - qc_result
+      x-openapi-router-controller: openapi_server.controllers.qc_result_controller
+    get:
+      description: Return the QC result associated with a sample.
+      operationId: samples_id_qc_result_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QcResult'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - qc_result
+      x-openapi-router-controller: openapi_server.controllers.qc_result_controller
+    put:
+      description: Add or replace new QC result associated with a sample.
+      operationId: samples_id_qc_result_put
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QcResult'
+        description: QC result to be added
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QcResult'
+          description: OK
+          headers:
+            Location:
+              description: uri for the QC result
+              explode: false
+              schema:
+                type: string
+              style: simple
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found (sample not found)
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - qc_result
+      x-openapi-router-controller: openapi_server.controllers.qc_result_controller
+  /samples/{id}/status:
+    delete:
+      description: Delete the status associated with a sample with {id}.
+      operationId: samples_id_status_delete
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample_status
+      x-openapi-router-controller: openapi_server.controllers.sample_status_controller
+    get:
+      description: Return the status associated with a sample.
+      operationId: samples_id_status_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample_status
+      x-openapi-router-controller: openapi_server.controllers.sample_status_controller
+    patch:
+      description: Update status associated with a sample with new data.
+      operationId: samples_id_status_patch
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+        description: Status to be added
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found (sample not found)
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample_status
+      x-openapi-router-controller: openapi_server.controllers.sample_status_controller
+    put:
+      description: Add or replace new status associated with a sample.
+      operationId: samples_id_status_put
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Status'
+        description: Status to be added.
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+          description: OK
+          headers:
+            Location:
+              description: uri for the status
+              explode: false
+              schema:
+                type: string
+              style: simple
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found (sample not found)
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample_status
+      x-openapi-router-controller: openapi_server.controllers.sample_status_controller
+components:
+  schemas:
+    File:
+      example:
+        file-type: fastq
+        filename: filename
+        md5sum: md5sum
+      properties:
+        md5sum:
+          type: string
+        filename:
+          type: string
+        file-type:
+          enum:
+          - fastq
+          - vcf
+          type: string
+      required:
+      - file-type
+      - filename
+      - md5sum
+      type: object
+    Event:
+      example:
+        duration: 1
+        software-version: software-version
+        start-time: 6.027456183070403
+        software: software
+        name: de-contamination
+        id: 0
+        command: command
+      properties:
+        id:
+          type: integer
+        name:
+          enum:
+          - de-contamination
+          - QC
+          - variant-calling
+          - prediction
+          - bigsi-building
+          - distance-calculation
+          type: string
+        software:
+          type: string
+        software-version:
+          type: string
+        start-time:
+          type: number
+        duration:
+          format: int32
+          type: integer
+        command:
+          type: string
+      required:
+      - command
+      - duration
+      - name
+      - software
+      - software-version
+      - start-time
+      type: object
+    QcResult:
+      example:
+        coverage: 0
+        tbc: tbc
+        decision: pass
+      properties:
+        coverage:
+          format: int32
+          type: integer
+        tbc:
+          type: string
+        decision:
+          enum:
+          - pass
+          - fail
+          type: string
+      required:
+      - coverage
+      - decision
+      - tbc
+      type: object
+    Status:
+      example:
+        stage: accepted
+      properties:
+        de-contamination:
+          $ref: '#/components/schemas/ProcessingStatus'
+        qc:
+          $ref: '#/components/schemas/ProcessingStatus'
+        variant-calling:
+          $ref: '#/components/schemas/ProcessingStatus'
+        prediction:
+          $ref: '#/components/schemas/ProcessingStatus'
+        bigsi-building:
+          $ref: '#/components/schemas/ProcessingStatus'
+        distance-calculation:
+          $ref: '#/components/schemas/ProcessingStatus'
+        stage:
+          enum:
+          - accepted
+          - qc-failed
+          - live
+          - deprecated
+          type: string
+      required:
+      - bigsi-building
+      - de-contamination
+      - distance-calculation
+      - prediction
+      - qc
+      - variant-calling
+      type: object
+    ProcessingStatus:
+      enum:
+      - pending
+      - started
+      - failed
+      - complete
+      type: string
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
