@@ -2,7 +2,7 @@ import connexion
 import six
 
 from openapi_server.models.error import Error  # noqa: E501
-from openapi_server import util
+from openapi_server import util, orm
 
 
 def samples_id_head(id):  # noqa: E501
@@ -15,4 +15,9 @@ def samples_id_head(id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+
+    resource = orm.Sample.query.get(id)
+    if not resource:
+        return Error(404, 'Not found'), 404
+
+    return '', 200

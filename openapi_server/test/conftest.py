@@ -70,6 +70,13 @@ def get_file(make_request):
 
 
 @fixture
+def check_sample(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}', 'HEAD', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample():
     def _(sample_id):
         inst = Sample(id=sample_id)
