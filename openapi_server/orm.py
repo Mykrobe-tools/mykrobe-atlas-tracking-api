@@ -34,14 +34,17 @@ class Event(APIModelMixin, db.Model):
     api_model_class = models.Event
 
 
-class Sample(db.Model):
-    id = Column(String, primary_key=True)
-    events = db.relationship(Event, backref='sample')
-
-
 class File(APIModelMixin, db.Model):
     md5sum = Column(String, primary_key=True)
     filename = Column(String)
     file_type = Column(String)
 
+    sample_id = Column(String, ForeignKey('sample.id'))
+
     api_model_class = models.File
+
+
+class Sample(db.Model):
+    id = Column(String, primary_key=True)
+    events = db.relationship(Event, backref='sample')
+    files = db.relationship(File, backref='sample')

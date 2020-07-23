@@ -1,6 +1,9 @@
 import connexion
 import six
+from sqlalchemy.exc import IntegrityError
 
+from openapi_server.db import db
+from openapi_server.models import File
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server import util, orm
 
@@ -66,7 +69,7 @@ def samples_id_files_md5sum_get(id, md5sum):  # noqa: E501
     return 'do some magic!'
 
 
-def samples_id_files_post(id, file):  # noqa: E501
+def samples_id_files_post(id, file=None):  # noqa: E501
     """samples_id_files_post
 
     Add a new file to be associated with a sample. # noqa: E501
@@ -80,4 +83,18 @@ def samples_id_files_post(id, file):  # noqa: E501
     """
     if connexion.request.is_json:
         file = File.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    primary = orm.Sample.query.get(id)
+    if not primary:
+        return Error(404, 'Not found'), 404
+
+    inst = orm.File.from_model(file)
+    inst.sample_id = primary.id
+
+    db.session.add(inst)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        return Error(409, 'Already existed'), 409
+    else:
+        return inst.to_model(), 201

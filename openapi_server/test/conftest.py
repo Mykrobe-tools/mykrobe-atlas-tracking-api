@@ -70,6 +70,13 @@ def get_file(make_request):
 
 
 @fixture
+def create_file(make_request):
+    def _(sample_id, file, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files', 'POST', json=file, success_code=201, *args, **kwargs)
+    return _
+
+
+@fixture
 def check_sample(make_request):
     def _(sample_id, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}', 'HEAD', *args, **kwargs)
@@ -95,7 +102,7 @@ def delete_sample():
 
 
 @fixture
-def create_file():
+def create_orphan_file():
     def _(model):
         inst = File.from_model(model)
         db.session.add(inst)

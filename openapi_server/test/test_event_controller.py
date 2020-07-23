@@ -4,7 +4,8 @@ from hypothesis import given, assume
 from hypothesis.strategies import lists
 
 from openapi_server.models import Event
-from openapi_server.test.assertions import assert_equal_events, assert_equal_lists
+from openapi_server.test.assertions import assert_equal_events, assert_equal_lists, \
+    assert_creating_secondary_resource_with_primary_resource
 from openapi_server.test.context_managers import managed_db
 from openapi_server.test.strategies import events, sample_ids
 
@@ -38,26 +39,12 @@ def test_listing_events(sample_id, event_list, other_sample_id, list_event, crea
         assert_equal_lists(listed, associated_events)
 
 
-@given(sample_id=sample_ids(), event=events())
-def test_creating_events_with_non_existent_samples(sample_id, event, create_event):
-    response = create_event(sample_id, event)
-    assert response.status_code == 404
-
-
-@given(sample_id=sample_ids(), event=events(without_id=True))
-def test_creating_events(sample_id, event, create_event, get_event, create_sample):
-    with managed_db():
-        create_sample(sample_id)
-
-        response = create_event(sample_id, event)
-        assert response.status_code == 201
-        event.id = response.json['id']
-
-        response = get_event(sample_id, event.id)
-        assert response.status_code == 200
-
-        created = Event.from_dict(response.json)
-        assert_equal_events(created, event)
+@given(primary_pk_value=sample_ids(), secondary_resource=events(without_id=True))
+def test_common_properties(primary_pk_value, secondary_resource, create_sample, create_event, get_event):
+    assert_creating_secondary_resource_with_primary_resource(
+        primary_pk_value, secondary_resource, create_primary=create_sample, create_secondary=create_event, get_secondary=get_event,
+        secondary_eq_assertion=assert_equal_events, db_generated_pk=True
+    )
 
 
 @given(sample_id=sample_ids(), event=events())

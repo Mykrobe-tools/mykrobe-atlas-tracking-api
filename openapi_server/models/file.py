@@ -34,7 +34,7 @@ class File(Model):
         self.attribute_map = {
             'md5sum': 'md5sum',
             'filename': 'filename',
-            'file_type': 'file_type'
+            'file_type': 'file-type'
         }
 
         self._md5sum = md5sum
