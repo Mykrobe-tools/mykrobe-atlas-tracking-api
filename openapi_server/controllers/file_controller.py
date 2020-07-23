@@ -2,7 +2,7 @@ import connexion
 import six
 
 from openapi_server.models.error import Error  # noqa: E501
-from openapi_server import util
+from openapi_server import util, orm
 
 
 def files_md5sum_get(md5sum):  # noqa: E501
@@ -15,7 +15,12 @@ def files_md5sum_get(md5sum):  # noqa: E501
 
     :rtype: File
     """
-    return 'do some magic!'
+
+    resource = orm.File.query.get(md5sum)
+    if not resource:
+        return Error(404, 'Not found'), 404
+
+    return resource.to_model(), 200
 
 
 def samples_id_files_get(id):  # noqa: E501

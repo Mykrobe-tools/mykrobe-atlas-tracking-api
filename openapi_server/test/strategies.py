@@ -1,6 +1,9 @@
+from hashlib import md5
+
 from hypothesis.strategies import composite, text, integers, floats, sampled_from, characters
 
 from openapi_server.models import Event
+from openapi_server.models.file import File
 
 
 def int64s():
@@ -9,6 +12,11 @@ def int64s():
 
 def sample_ids():
     return text(alphabet=characters(whitelist_categories=('L', 'N')), min_size=1)
+
+
+@composite
+def md5s(draw):
+    return md5(draw(text(min_size=1)).encode()).hexdigest()
 
 
 @composite
@@ -22,4 +30,13 @@ def events(draw, without_id=False):
         software=draw(text()),
         software_version=draw(text()),
         start_time=draw(floats())
+    )
+
+
+@composite
+def files(draw):
+    return File(
+        md5sum=draw(md5s()),
+        filename=draw(text()),
+        file_type=draw(sampled_from(['fastq', 'vcf']))
     )

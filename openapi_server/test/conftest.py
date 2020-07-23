@@ -5,7 +5,7 @@ from pytest import fixture
 
 from openapi_server.db import db
 from openapi_server.encoder import JSONEncoder
-from openapi_server.orm import Sample
+from openapi_server.orm import Sample, File
 
 
 @fixture
@@ -63,10 +63,17 @@ def delete_event(make_request):
 
 
 @fixture
+def get_file(make_request):
+    def _(md5sum, *args, **kwargs):
+        return make_request(f'/api/v1/files/{md5sum}', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample():
     def _(sample_id):
-        sample = Sample(id=sample_id)
-        db.session.add(sample)
+        inst = Sample(id=sample_id)
+        db.session.add(inst)
         db.session.commit()
     return _
 
@@ -74,7 +81,16 @@ def create_sample():
 @fixture
 def delete_sample():
     def _(sample_id):
-        sample = Sample.query.get(sample_id)
-        db.session.delete(sample)
+        inst = Sample.query.get(sample_id)
+        db.session.delete(inst)
+        db.session.commit()
+    return _
+
+
+@fixture
+def create_file():
+    def _(model):
+        inst = File.from_model(model)
+        db.session.add(inst)
         db.session.commit()
     return _
