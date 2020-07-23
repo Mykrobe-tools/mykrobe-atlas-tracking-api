@@ -68,7 +68,7 @@ def test_getting_events_of_non_existent_samples(sample_id, event, get_event, cre
         delete_sample(sample_id)
 
         response = get_event(sample_id, event.id)
-        assert response.status_code != 404
+        assert response.status_code == 404
 
 
 @given(sample_id=sample_ids(), event=events())
