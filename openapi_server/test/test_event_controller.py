@@ -9,8 +9,9 @@ from openapi_server.test.strategies import events, sample_ids
 
 
 @given(primary_pk_value=sample_ids(), other_primary_pk_value=sample_ids(), secondary_resources=lists(events(), min_size=1, unique_by=lambda x: x.id))
-def test_listing_behaviours(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_event, list_event):
-    assert_listing_secondary_resources(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_event, list_event)
+def test_listing_behaviours(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_event,
+                            list_events):
+    assert_listing_secondary_resources(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_event, list_events)
 
 
 @given(primary_pk_value=sample_ids(), secondary_resource=events(without_id=True))

@@ -35,7 +35,7 @@ def make_request(client):
 
 
 @fixture
-def list_event(make_request):
+def list_events(make_request):
     def _(sample_id, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/events', 'GET', *args, **kwargs)
     return _
