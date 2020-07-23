@@ -1,7 +1,9 @@
 from hypothesis import given
+from hypothesis.strategies import lists
 
 from openapi_server.models import File
-from openapi_server.test.assertions import assert_creating_secondary_resource_with_primary_resource
+from openapi_server.test.assertions import assert_creating_secondary_resource_with_primary_resource, \
+    assert_listing_secondary_resources
 from openapi_server.test.context_managers import managed_db
 from openapi_server.test.strategies import md5s, files, sample_ids
 
@@ -28,3 +30,8 @@ def test_common_properties(primary_pk_value, secondary_resource, create_sample, 
     assert_creating_secondary_resource_with_primary_resource(
         primary_pk_value, secondary_resource, create_primary=create_sample, create_secondary=create_file, get_secondary=get_file,
         strict_lookup=False, secondary_pk_name='md5sum')
+
+
+@given(primary_pk_value=sample_ids(), other_primary_pk_value=sample_ids(), secondary_resources=lists(files(), min_size=1, unique_by=lambda x: x.md5sum))
+def test_listing_behaviours(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_file, list_files):
+    assert_listing_secondary_resources(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_file, list_files)

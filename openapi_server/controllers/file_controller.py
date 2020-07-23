@@ -36,7 +36,14 @@ def samples_id_files_get(id):  # noqa: E501
 
     :rtype: List[File]
     """
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    files = [x.to_model() for x in sample.files]
+
+    return files, 200
 
 
 def samples_id_files_md5sum_delete(id, md5sum):  # noqa: E501

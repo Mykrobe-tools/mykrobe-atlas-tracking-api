@@ -77,6 +77,13 @@ def create_file(make_request):
 
 
 @fixture
+def list_files(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
 def check_sample(make_request):
     def _(sample_id, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}', 'HEAD', *args, **kwargs)
