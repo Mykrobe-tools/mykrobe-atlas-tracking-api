@@ -1,5 +1,5 @@
 from hypothesis import given
-from hypothesis.strategies import lists
+from hypothesis.strategies import lists, sets
 
 from openapi_server.models import File
 from openapi_server.test.scenarios import check_creating_secondary_resource_scenarios, \
@@ -32,6 +32,6 @@ def test_common_properties(primary_pk_value, secondary_resource, create_sample, 
         strict_lookup=False, secondary_pk_name='md5sum')
 
 
-@given(primary_pk_value=sample_ids(), other_primary_pk_value=sample_ids(), secondary_resources=lists(files(), min_size=1, unique_by=lambda x: x.md5sum))
-def test_listing_behaviours(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_file, list_files):
-    check_listing_secondary_resources_scenarios(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_file, list_files)
+@given(primary_pk_values=sets(sample_ids(), min_size=2, max_size=2), secondary_resources=lists(files(), min_size=1, unique_by=lambda x: x.md5sum))
+def test_listing_behaviours(primary_pk_values, secondary_resources, create_sample, create_file, list_files):
+    check_listing_secondary_resources_scenarios(primary_pk_values, secondary_resources, create_sample, create_file, list_files)

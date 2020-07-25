@@ -1,7 +1,5 @@
 import random
 
-from hypothesis import assume
-
 from openapi_server.test.assertions import assert_equal_resources, assert_equal_lists
 from openapi_server.test.context_managers import managed_db
 
@@ -37,11 +35,12 @@ def check_creating_secondary_resource_scenarios(
             assert response.status_code == 409
 
 
-def check_listing_secondary_resources_scenarios(primary_pk_value, other_primary_pk_value, secondary_resources, create_primary, create_secondary, list_secondary):
+def check_listing_secondary_resources_scenarios(primary_pk_values, secondary_resources, create_primary, create_secondary, list_secondary):
+    primary_pk_value, other_primary_pk_value = primary_pk_values
+
     response = list_secondary(primary_pk_value)
     assert response.status_code == 404
 
-    assume(primary_pk_value != other_primary_pk_value)
     associated_secondary_resources = random.sample(secondary_resources, random.randrange(0, len(secondary_resources)))
 
     with managed_db():
