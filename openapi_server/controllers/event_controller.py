@@ -1,5 +1,4 @@
 import connexion
-from sqlalchemy.exc import IntegrityError
 
 from openapi_server import orm
 from openapi_server.db import db

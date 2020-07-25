@@ -2,8 +2,9 @@ from hypothesis import given
 from hypothesis.strategies import lists
 
 from openapi_server.models import Event
-from openapi_server.test.assertions import assert_equal_events, \
-    assert_creating_secondary_resource_with_primary_resource, assert_listing_secondary_resources
+from openapi_server.test.assertions import assert_equal_events
+from openapi_server.test.scenarios import check_creating_secondary_resource_scenarios, \
+    check_listing_secondary_resources_scenarios
 from openapi_server.test.context_managers import managed_db
 from openapi_server.test.strategies import events, sample_ids
 
@@ -11,12 +12,12 @@ from openapi_server.test.strategies import events, sample_ids
 @given(primary_pk_value=sample_ids(), other_primary_pk_value=sample_ids(), secondary_resources=lists(events(), min_size=1, unique_by=lambda x: x.id))
 def test_listing_behaviours(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_event,
                             list_events):
-    assert_listing_secondary_resources(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_event, list_events)
+    check_listing_secondary_resources_scenarios(primary_pk_value, other_primary_pk_value, secondary_resources, create_sample, create_event, list_events)
 
 
 @given(primary_pk_value=sample_ids(), secondary_resource=events(without_id=True))
 def test_creating_behaviours(primary_pk_value, secondary_resource, create_sample, create_event, get_event):
-    assert_creating_secondary_resource_with_primary_resource(
+    check_creating_secondary_resource_scenarios(
         primary_pk_value, secondary_resource, create_primary=create_sample, create_secondary=create_event, get_secondary=get_event,
         secondary_eq_assertion=assert_equal_events, db_generated_pk=True
     )
