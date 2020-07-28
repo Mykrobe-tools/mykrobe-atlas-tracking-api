@@ -5,7 +5,8 @@ from openapi_server.models import Event
 from openapi_server.test.assertions import assert_equal_events
 from openapi_server.test.context_managers import managed_db
 from openapi_server.test.scenarios import check_creating_secondary_resource_scenarios, \
-    check_listing_secondary_resources_scenarios
+    check_listing_secondary_resources_scenarios, check_getting_secondary_resource_of_non_existent_primary_resource, \
+    check_getting_non_existent_secondary_resource, check_getting_secondary_resource
 from openapi_server.test.strategies import events, sample_ids
 
 
@@ -25,34 +26,17 @@ def test_creating_behaviours(primary_pk_value, secondary_resource, create_sample
 
 @given(sample_id=sample_ids(), event=events())
 def test_getting_events_of_non_existent_samples(sample_id, event, get_event, create_event, create_sample, delete_sample):
-    with managed_db():
-        create_sample(sample_id)
-        create_event(sample_id, event, ensure=True)
-        delete_sample(sample_id)
-
-        response = get_event(sample_id, event.id)
-        assert response.status_code == 404
+    check_getting_secondary_resource_of_non_existent_primary_resource(sample_id, event, get_event, create_event, create_sample, delete_sample)
 
 
 @given(sample_id=sample_ids(), event=events())
 def test_getting_non_existent_events(sample_id, event, get_event, create_sample):
-    with managed_db():
-        create_sample(sample_id)
-        response = get_event(sample_id, event.id)
-        assert response.status_code == 404
+    check_getting_non_existent_secondary_resource(sample_id, event, get_event, create_sample)
 
 
 @given(sample_id=sample_ids(), event=events())
 def test_getting_events(sample_id, event, get_event, create_event, create_sample):
-    with managed_db():
-        create_sample(sample_id)
-        create_event(sample_id, event, ensure=True)
-
-        response = get_event(sample_id, event.id)
-        assert response.status_code == 200
-
-        created = Event.from_dict(response.json)
-        assert_equal_events(created, event)
+    check_getting_secondary_resource(sample_id, event, get_event, create_event, create_sample, secondary_eq_assertion=assert_equal_events)
 
 
 @given(sample_id=sample_ids(), event=events())

@@ -58,3 +58,36 @@ def check_listing_secondary_resources_scenarios(primary_pk_values, secondary_res
 
         listed = [type(secondary_resources[0]).from_dict(x) for x in response.json]
         assert_equal_lists(listed, associated_secondary_resources)
+
+
+def check_getting_secondary_resource_of_non_existent_primary_resource(
+        primary_resource, secondary_resource, get_secondary_resource, create_secondary_resource, create_primary_resource, delete_primary_resource,
+        secondary_pk_name='id'):
+    with managed_db():
+        create_primary_resource(primary_resource)
+        create_secondary_resource(primary_resource, secondary_resource, ensure=True)
+        delete_primary_resource(primary_resource)
+
+        response = get_secondary_resource(primary_resource, getattr(secondary_resource, secondary_pk_name))
+        assert response.status_code == 404
+
+
+def check_getting_non_existent_secondary_resource(primary_resource, secondary_resource, get_secondary_resource, create_primary_resource,
+                                                  secondary_pk_name='id'):
+    with managed_db():
+        create_primary_resource(primary_resource)
+        response = get_secondary_resource(primary_resource, getattr(secondary_resource, secondary_pk_name))
+        assert response.status_code == 404
+
+
+def check_getting_secondary_resource(primary_resource, secondary_resource, get_secondary_resource, create_secondary_resource, create_primary_resource,
+                                     secondary_eq_assertion=assert_equal_resources, secondary_pk_name='id'):
+    with managed_db():
+        create_primary_resource(primary_resource)
+        create_secondary_resource(primary_resource, secondary_resource, ensure=True)
+
+        response = get_secondary_resource(primary_resource, getattr(secondary_resource, secondary_pk_name))
+        assert response.status_code == 200
+
+        created = type(secondary_resource).from_dict(response.json)
+        secondary_eq_assertion(created, secondary_resource)

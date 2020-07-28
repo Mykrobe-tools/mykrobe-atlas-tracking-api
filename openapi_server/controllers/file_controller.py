@@ -73,7 +73,16 @@ def samples_id_files_md5sum_get(id, md5sum):  # noqa: E501
 
     :rtype: File
     """
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    file = orm.File.query.with_parent(sample).filter_by(md5sum=md5sum).first()
+    if not file:
+        return Error(404, 'Not found'), 404
+
+    return file.to_model(), 200
 
 
 def samples_id_files_post(id, file=None):  # noqa: E501

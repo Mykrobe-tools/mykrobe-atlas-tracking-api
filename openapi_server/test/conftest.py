@@ -70,6 +70,13 @@ def get_file(make_request):
 
 
 @fixture
+def get_file_of_sample(make_request):
+    def _(sample_id, md5sum, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files/{md5sum}', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_file(make_request):
     def _(sample_id, file, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/files', 'POST', json=file, success_code=201, *args, **kwargs)
