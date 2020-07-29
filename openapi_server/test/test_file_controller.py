@@ -39,15 +39,47 @@ def test_listing_behaviours(primary_pk_values, secondary_resources, create_sampl
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_getting_events_of_non_existent_samples(sample_id, file, get_file_of_sample, create_file, create_sample, delete_sample):
+def test_getting_files_of_non_existent_samples(sample_id, file, get_file_of_sample, create_file, create_sample, delete_sample):
     check_getting_secondary_resource_of_non_existent_primary_resource(sample_id, file, get_file_of_sample, create_file, create_sample, delete_sample, secondary_pk_name='md5sum')
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_getting_non_existent_events(sample_id, file, get_file_of_sample, create_sample):
+def test_getting_non_existent_files(sample_id, file, get_file_of_sample, create_sample):
     check_getting_non_existent_secondary_resource(sample_id, file, get_file_of_sample, create_sample, secondary_pk_name='md5sum')
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_getting_events(sample_id, file, get_file_of_sample, create_file, create_sample):
+def test_getting_files(sample_id, file, get_file_of_sample, create_file, create_sample):
     check_getting_secondary_resource(sample_id, file, get_file_of_sample, create_file, create_sample, secondary_pk_name='md5sum')
+
+
+@given(sample_id=sample_ids(), file=files())
+def test_deleting_files_of_non_existent_samples(sample_id, file, delete_file, create_file, create_sample, delete_sample):
+    with managed_db():
+        create_sample(sample_id)
+        create_file(sample_id, file, ensure=True)
+        delete_sample(sample_id)
+
+        response = delete_file(sample_id, file.md5sum)
+        assert response.status_code == 404
+
+
+@given(sample_id=sample_ids(), file=files())
+def test_deleting_non_existent_events(sample_id, file, delete_file, create_sample):
+    with managed_db():
+        create_sample(sample_id)
+        response = delete_file(sample_id, file.md5sum)
+        assert response.status_code == 404
+
+
+@given(sample_id=sample_ids(), file=files())
+def test_deleting_events(sample_id, file, delete_file, create_file, create_sample, get_file):
+    with managed_db():
+        create_sample(sample_id)
+        create_file(sample_id, file, ensure=True)
+
+        response = delete_file(sample_id, file.md5sum)
+        assert response.status_code == 204
+
+        response = get_file(sample_id, file.md5sum)
+        assert response.status_code == 404

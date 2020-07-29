@@ -58,7 +58,19 @@ def samples_id_files_md5sum_delete(id, md5sum):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    file = orm.File.query.with_parent(sample).filter_by(md5sum=md5sum).first()
+    if not file:
+        return Error(404, 'Not found'), 404
+
+    db.session.delete(file)
+    db.session.commit()
+
+    return '', 204
 
 
 def samples_id_files_md5sum_get(id, md5sum):  # noqa: E501

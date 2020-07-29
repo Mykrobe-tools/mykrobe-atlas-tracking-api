@@ -91,6 +91,13 @@ def list_files(make_request):
 
 
 @fixture
+def delete_file(make_request):
+    def _(sample_id, md5sum, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files/{md5sum}', 'DELETE', *args, **kwargs)
+    return _
+
+
+@fixture
 def check_sample(make_request):
     def _(sample_id, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}', 'HEAD', *args, **kwargs)
