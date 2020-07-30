@@ -105,6 +105,20 @@ def check_sample(make_request):
 
 
 @fixture
+def create_or_update_qc_result(make_request):
+    def _(sample_id, qc_result, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'PUT', json=qc_result, *args, **kwargs)
+    return _
+
+
+@fixture
+def get_qc_result(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample():
     def _(sample_id):
         inst = Sample(id=sample_id)

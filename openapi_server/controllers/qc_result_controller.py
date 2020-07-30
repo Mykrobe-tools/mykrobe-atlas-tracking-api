@@ -1,9 +1,10 @@
 import connexion
 import six
 
+from openapi_server.db import db
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.qc_result import QcResult  # noqa: E501
-from openapi_server import util
+from openapi_server import util, orm
 
 
 def samples_id_qc_result_delete(id):  # noqa: E501
@@ -29,10 +30,15 @@ def samples_id_qc_result_get(id):  # noqa: E501
 
     :rtype: QcResult
     """
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    return sample.qc_result.to_model(), 200
 
 
-def samples_id_qc_result_put(id, qc_result):  # noqa: E501
+def samples_id_qc_result_put(id, qc_result=None):  # noqa: E501
     """samples_id_qc_result_put
 
     Add or replace new QC result associated with a sample. # noqa: E501
@@ -46,4 +52,18 @@ def samples_id_qc_result_put(id, qc_result):  # noqa: E501
     """
     if connexion.request.is_json:
         qc_result = QcResult.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    inst = orm.QcResult.from_model(qc_result)
+    inst.sample_id = sample.id
+
+    if sample.qc_result:
+        sample.qc_result = inst
+    else:
+        db.session.add(inst)
+    db.session.commit()
+
+    return inst.to_model(), 200

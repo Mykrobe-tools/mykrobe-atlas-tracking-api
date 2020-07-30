@@ -2,8 +2,12 @@ from hashlib import md5
 
 from hypothesis.strategies import composite, text, integers, floats, sampled_from, characters
 
-from openapi_server.models import Event
+from openapi_server.models import Event, QcResult
 from openapi_server.models.file import File
+
+
+def int32s():
+    return integers(min_value=-2**31, max_value=2**31-1)
 
 
 def int64s():
@@ -39,4 +43,13 @@ def files(draw):
         md5sum=draw(md5s()),
         filename=draw(text()),
         file_type=draw(sampled_from(['fastq', 'vcf']))
+    )
+
+
+@composite
+def qc_results(draw):
+    return QcResult(
+        coverage=draw(int32s()),
+        tbc=draw(text()),
+        decision=draw(sampled_from(['pass', 'fail']))
     )

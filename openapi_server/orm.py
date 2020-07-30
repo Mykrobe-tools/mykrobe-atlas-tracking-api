@@ -44,7 +44,19 @@ class File(APIModelMixin, db.Model):
     api_model_class = models.File
 
 
+class QcResult(APIModelMixin, db.Model):
+    id = Column(Integer, primary_key=True)
+    coverage = Column(Integer)
+    tbc = Column(String)
+    decision = Column(String)
+
+    sample_id = Column(String, ForeignKey('sample.id'))
+
+    api_model_class = models.QcResult
+
+
 class Sample(db.Model):
     id = Column(String, primary_key=True)
     events = db.relationship(Event, backref='sample')
     files = db.relationship(File, backref='sample')
+    qc_result = db.relationship(QcResult, backref='sample', uselist=False)
