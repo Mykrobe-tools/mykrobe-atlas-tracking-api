@@ -17,7 +17,15 @@ def samples_id_qc_result_delete(id):  # noqa: E501
 
     :rtype: None
     """
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample or not sample.qc_result:
+        return Error(404, 'Not found'), 404
+
+    db.session.delete(sample.qc_result)
+    db.session.commit()
+
+    return '', 204
 
 
 def samples_id_qc_result_get(id):  # noqa: E501
@@ -32,7 +40,7 @@ def samples_id_qc_result_get(id):  # noqa: E501
     """
 
     sample = orm.Sample.query.get(id)
-    if not sample:
+    if not sample or not sample.qc_result:
         return Error(404, 'Not found'), 404
 
     return sample.qc_result.to_model(), 200

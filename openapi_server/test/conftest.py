@@ -119,6 +119,13 @@ def get_qc_result(make_request):
 
 
 @fixture
+def delete_qc_result(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'DELETE', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample():
     def _(sample_id):
         inst = Sample(id=sample_id)

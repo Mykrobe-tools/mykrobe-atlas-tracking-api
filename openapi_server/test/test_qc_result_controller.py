@@ -49,12 +49,19 @@ def test_update_qc_result(sample_id, original, new, create_sample, create_or_upd
 
 
 @given(sample_id=sample_ids())
-def test_getting_non_existent_qc_result(sample_id, get_qc_result):
+def test_getting_qc_results_of_non_existent_samples(sample_id, get_qc_result):
     assert get_qc_result(sample_id).status_code == 404
 
 
+@given(sample_id=sample_ids())
+def test_getting_non_existent_qc_results(sample_id, create_sample, get_qc_result):
+    with managed_db():
+        create_sample(sample_id)
+        assert get_qc_result(sample_id).status_code == 404
+
+
 @given(sample_id=sample_ids(), qc_result=qc_results())
-def test_getting_qc_result(sample_id, qc_result, create_sample, create_or_update_qc_result, get_qc_result):
+def test_getting_qc_results(sample_id, qc_result, create_sample, create_or_update_qc_result, get_qc_result):
     with managed_db():
         create_sample(sample_id)
         create_or_update_qc_result(sample_id, qc_result, ensure=True)
@@ -64,3 +71,30 @@ def test_getting_qc_result(sample_id, qc_result, create_sample, create_or_update
 
         assert response.status_code == 200, response.data.decode()
         assert retrieved == qc_result
+
+
+@given(sample_id=sample_ids())
+def test_deleting_qc_result_of_non_existent_samples(sample_id, delete_qc_result):
+    response = delete_qc_result(sample_id)
+    assert response.status_code == 404
+
+
+@given(sample_id=sample_ids())
+def test_deleting_non_existent_qc_results(sample_id, create_sample, delete_qc_result):
+    with managed_db():
+        create_sample(sample_id)
+        response = delete_qc_result(sample_id)
+        assert response.status_code == 404
+
+
+@given(sample_id=sample_ids(), qc_result=qc_results())
+def test_deleting_files(sample_id, qc_result, create_sample, create_or_update_qc_result, delete_qc_result, get_qc_result):
+    with managed_db():
+        create_sample(sample_id)
+        create_or_update_qc_result(sample_id, qc_result, ensure=True)
+
+        response = delete_qc_result(sample_id)
+        assert response.status_code == 204
+
+        response = get_qc_result(sample_id)
+        assert response.status_code == 404

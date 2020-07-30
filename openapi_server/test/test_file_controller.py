@@ -65,7 +65,7 @@ def test_deleting_files_of_non_existent_samples(sample_id, file, delete_file, cr
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_deleting_non_existent_events(sample_id, file, delete_file, create_sample):
+def test_deleting_non_existent_files(sample_id, file, delete_file, create_sample):
     with managed_db():
         create_sample(sample_id)
         response = delete_file(sample_id, file.md5sum)
@@ -73,7 +73,7 @@ def test_deleting_non_existent_events(sample_id, file, delete_file, create_sampl
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_deleting_events(sample_id, file, delete_file, create_file, create_sample, get_file):
+def test_deleting_files(sample_id, file, delete_file, create_file, create_sample, get_file):
     with managed_db():
         create_sample(sample_id)
         create_file(sample_id, file, ensure=True)
