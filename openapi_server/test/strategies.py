@@ -2,7 +2,7 @@ from hashlib import md5
 
 from hypothesis.strategies import composite, text, integers, floats, sampled_from, characters
 
-from openapi_server.models import Event, QcResult
+from openapi_server.models import Event, QcResult, Status
 from openapi_server.models.file import File
 
 
@@ -52,4 +52,18 @@ def qc_results(draw):
         coverage=draw(int32s()),
         tbc=draw(text()),
         decision=draw(sampled_from(['pass', 'fail']))
+    )
+
+
+@composite
+def statuses(draw):
+    processing_statuses = ['pending', 'started', 'complete', 'failed']
+    return Status(
+        de_contamination=draw(sampled_from(processing_statuses)),
+        qc=draw(sampled_from(processing_statuses)),
+        variant_calling=draw(sampled_from(processing_statuses)),
+        prediction=draw(sampled_from(processing_statuses)),
+        bigsi_building=draw(sampled_from(processing_statuses)),
+        distance_calculation=draw(sampled_from(processing_statuses)),
+        stage=draw(sampled_from(["accepted", "qc-failed", "live", "deprecated"]))
     )

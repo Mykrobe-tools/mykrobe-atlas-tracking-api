@@ -665,17 +665,47 @@ components:
         - distance-calculation
       properties:
         de-contamination:
-          $ref: '#/components/schemas/ProcessingStatus'
+          type: string
+          enum:
+            - pending
+            - started
+            - complete
+            - failed
         qc:
-          $ref: '#/components/schemas/ProcessingStatus'
+          type: string
+          enum:
+            - pending
+            - started
+            - complete
+            - failed
         variant-calling:
-          $ref: '#/components/schemas/ProcessingStatus'
+          type: string
+          enum:
+            - pending
+            - started
+            - complete
+            - failed
         prediction:
-          $ref: '#/components/schemas/ProcessingStatus'
+          type: string
+          enum:
+            - pending
+            - started
+            - complete
+            - failed
         bigsi-building:
-          $ref: '#/components/schemas/ProcessingStatus'
+          type: string
+          enum:
+            - pending
+            - started
+            - complete
+            - failed
         distance-calculation:
-          $ref: '#/components/schemas/ProcessingStatus'
+          type: string
+          enum:
+            - pending
+            - started
+            - complete
+            - failed
         stage:
           type: string
           enum:
@@ -683,13 +713,6 @@ components:
             - qc-failed
             - live
             - deprecated
-    ProcessingStatus:
-      type: string
-      enum:
-        - pending
-        - started
-        - failed
-        - complete
     Error:
       type: object
       required:

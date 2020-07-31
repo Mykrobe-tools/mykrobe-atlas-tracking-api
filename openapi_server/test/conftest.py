@@ -126,6 +126,27 @@ def delete_qc_result(make_request):
 
 
 @fixture
+def create_or_replace_status(make_request):
+    def _(sample_id, status, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'PUT', json=status, *args, **kwargs)
+    return _
+
+
+@fixture
+def get_status(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def delete_status(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'DELETE', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample():
     def _(sample_id):
         inst = Sample(id=sample_id)
