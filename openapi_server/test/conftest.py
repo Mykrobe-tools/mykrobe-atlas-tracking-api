@@ -105,7 +105,7 @@ def check_sample(make_request):
 
 
 @fixture
-def create_or_update_qc_result(make_request):
+def create_or_replace_qc_result(make_request):
     def _(sample_id, qc_result, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'PUT', json=qc_result, *args, **kwargs)
     return _
