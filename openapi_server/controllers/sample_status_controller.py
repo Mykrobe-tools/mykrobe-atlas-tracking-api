@@ -1,10 +1,9 @@
 import connexion
-import six
 
+from openapi_server import orm
 from openapi_server.db import db
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.status import Status  # noqa: E501
-from openapi_server import util, orm
 
 
 def samples_id_status_delete(id):  # noqa: E501

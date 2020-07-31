@@ -42,7 +42,7 @@ def list_events(make_request):
 
 
 @fixture
-def create_event(make_request):
+def add_event(make_request):
     def _(sample_id, event, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/events', 'POST', json=event, success_code=201, *args, **kwargs)
     return _
@@ -77,7 +77,7 @@ def get_file_of_sample(make_request):
 
 
 @fixture
-def create_file(make_request):
+def add_file(make_request):
     def _(sample_id, file, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/files', 'POST', json=file, success_code=201, *args, **kwargs)
     return _
@@ -105,7 +105,7 @@ def check_sample(make_request):
 
 
 @fixture
-def create_or_replace_qc_result(make_request):
+def add_or_replace_qc_result(make_request):
     def _(sample_id, qc_result, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'PUT', json=qc_result, *args, **kwargs)
     return _
@@ -126,7 +126,7 @@ def delete_qc_result(make_request):
 
 
 @fixture
-def create_or_replace_status(make_request):
+def add_or_replace_status(make_request):
     def _(sample_id, status, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/status', 'PUT', json=status, *args, **kwargs)
     return _
@@ -172,7 +172,7 @@ def delete_sample():
 
 
 @fixture
-def create_orphan_file():
+def create_file():
     def _(model):
         inst = File.from_model(model)
         db.session.add(inst)

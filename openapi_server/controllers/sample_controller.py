@@ -1,8 +1,5 @@
-import connexion
-import six
-
+from openapi_server import orm
 from openapi_server.models.error import Error  # noqa: E501
-from openapi_server import util, orm
 
 
 def samples_id_head(id):  # noqa: E501

@@ -6,17 +6,17 @@ from openapi_server.test.strategies import sample_ids, statuses
 
 
 @given(sample_id=sample_ids(), status=statuses())
-def test_add_or_update_status_of_non_existent_sample(sample_id, status, create_or_replace_status):
-    response = create_or_replace_status(sample_id, status)
+def test_add_or_update_status_of_non_existent_sample(sample_id, status, add_or_replace_status):
+    response = add_or_replace_status(sample_id, status)
     assert response.status_code == 404, response.data.decode()
 
 
 @given(sample_id=sample_ids(), status=statuses())
-def test_add_status(sample_id, status, create_sample, create_or_replace_status, get_status):
+def test_add_status(sample_id, status, create_sample, add_or_replace_status, get_status):
     with managed_db():
         create_sample(sample_id)
 
-        response = create_or_replace_status(sample_id, status)
+        response = add_or_replace_status(sample_id, status)
         added = Status.from_dict(response.json)
 
         assert response.status_code == 200, response.data.decode()
@@ -30,12 +30,12 @@ def test_add_status(sample_id, status, create_sample, create_or_replace_status, 
 
 
 @given(sample_id=sample_ids(), original=statuses(), new=statuses())
-def test_replace_status(sample_id, original, new, create_sample, create_or_replace_status, get_status):
+def test_replace_status(sample_id, original, new, create_sample, add_or_replace_status, get_status):
     with managed_db():
         create_sample(sample_id)
-        create_or_replace_status(sample_id, original, ensure=True)
+        add_or_replace_status(sample_id, original, ensure=True)
 
-        response = create_or_replace_status(sample_id, new)
+        response = add_or_replace_status(sample_id, new)
         updated = Status.from_dict(response.json)
 
         assert response.status_code == 200, response.data.decode()
@@ -61,10 +61,10 @@ def test_getting_non_existent_statuses(sample_id, create_sample, get_status):
 
 
 @given(sample_id=sample_ids(), status=statuses())
-def test_getting_statuses(sample_id, status, create_sample, create_or_replace_status, get_status):
+def test_getting_statuses(sample_id, status, create_sample, add_or_replace_status, get_status):
     with managed_db():
         create_sample(sample_id)
-        create_or_replace_status(sample_id, status, ensure=True)
+        add_or_replace_status(sample_id, status, ensure=True)
 
         response = get_status(sample_id)
         retrieved = Status.from_dict(response.json)
@@ -88,10 +88,10 @@ def test_deleting_non_existent_statuses(sample_id, create_sample, delete_status)
 
 
 @given(sample_id=sample_ids(), status=statuses())
-def test_deleting_files(sample_id, status, create_sample, create_or_replace_status, delete_status, get_status):
+def test_deleting_files(sample_id, status, create_sample, add_or_replace_status, delete_status, get_status):
     with managed_db():
         create_sample(sample_id)
-        create_or_replace_status(sample_id, status, ensure=True)
+        add_or_replace_status(sample_id, status, ensure=True)
 
         response = delete_status(sample_id)
         assert response.status_code == 204
@@ -107,12 +107,12 @@ def test_update_status_of_non_existent_sample(sample_id, status, update_status):
 
 
 @given(sample_id=sample_ids(), original=statuses(), new=statuses())
-def test_update_status(sample_id, original, new, create_sample, create_or_replace_status, update_status, get_status):
+def test_update_status(sample_id, original, new, create_sample, add_or_replace_status, update_status, get_status):
     new.stage = "deprecated"
 
     with managed_db():
         create_sample(sample_id)
-        create_or_replace_status(sample_id, original, ensure=True)
+        add_or_replace_status(sample_id, original, ensure=True)
 
         response = update_status(sample_id, new)
         updated = Status.from_dict(response.json)
