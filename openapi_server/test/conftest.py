@@ -133,6 +133,13 @@ def create_or_replace_status(make_request):
 
 
 @fixture
+def update_status(make_request):
+    def _(sample_id, status, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'PATCH', json=status, *args, **kwargs)
+    return _
+
+
+@fixture
 def get_status(make_request):
     def _(sample_id, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/status', 'GET', *args, **kwargs)

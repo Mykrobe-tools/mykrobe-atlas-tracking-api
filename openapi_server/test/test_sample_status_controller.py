@@ -98,3 +98,30 @@ def test_deleting_files(sample_id, status, create_sample, create_or_replace_stat
 
         response = get_status(sample_id)
         assert response.status_code == 404
+
+
+@given(sample_id=sample_ids(), status=statuses())
+def test_update_status_of_non_existent_sample(sample_id, status, update_status):
+    response = update_status(sample_id, status)
+    assert response.status_code == 404, response.data.decode()
+
+
+@given(sample_id=sample_ids(), original=statuses(), new=statuses())
+def test_update_status(sample_id, original, new, create_sample, create_or_replace_status, update_status, get_status):
+    new.stage = "deprecated"
+
+    with managed_db():
+        create_sample(sample_id)
+        create_or_replace_status(sample_id, original, ensure=True)
+
+        response = update_status(sample_id, new)
+        updated = Status.from_dict(response.json)
+
+        assert response.status_code == 200, response.data.decode()
+        assert updated == new
+
+        response = get_status(sample_id)
+        retrieved = Status.from_dict(response.json)
+
+        assert response.status_code == 200, response.data.decode()
+        assert retrieved == updated

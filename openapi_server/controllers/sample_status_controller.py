@@ -60,7 +60,18 @@ def samples_id_status_patch(id, status=None):  # noqa: E501
     """
     if connexion.request.is_json:
         status = Status.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    sample = orm.Sample.query.get(id)
+    if not sample:
+        return Error(404, 'Not found'), 404
+
+    for prop in sample.status.api_model_properties():
+        if (new_value := getattr(status, prop)) is not None:
+            setattr(sample.status, prop, new_value)
+
+    db.session.commit()
+
+    return sample.status.to_model(), 200
 
 
 def samples_id_status_put(id, status=None):  # noqa: E501
