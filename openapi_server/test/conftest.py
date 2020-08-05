@@ -5,7 +5,7 @@ from pytest import fixture
 
 from openapi_server.db import db
 from openapi_server.encoder import JSONEncoder
-from openapi_server.orm import Sample
+from openapi_server.orm import Sample, File
 
 
 @fixture
@@ -35,14 +35,14 @@ def make_request(client):
 
 
 @fixture
-def list_event(make_request):
+def list_events(make_request):
     def _(sample_id, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/events', 'GET', *args, **kwargs)
     return _
 
 
 @fixture
-def create_event(make_request):
+def add_event(make_request):
     def _(sample_id, event, *args, **kwargs):
         return make_request(f'/api/v1/samples/{sample_id}/events', 'POST', json=event, success_code=201, *args, **kwargs)
     return _
@@ -63,10 +63,101 @@ def delete_event(make_request):
 
 
 @fixture
+def get_file(make_request):
+    def _(md5sum, *args, **kwargs):
+        return make_request(f'/api/v1/files/{md5sum}', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def get_file_of_sample(make_request):
+    def _(sample_id, md5sum, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files/{md5sum}', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def add_file(make_request):
+    def _(sample_id, file, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files', 'POST', json=file, success_code=201, *args, **kwargs)
+    return _
+
+
+@fixture
+def list_files(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def delete_file(make_request):
+    def _(sample_id, md5sum, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/files/{md5sum}', 'DELETE', *args, **kwargs)
+    return _
+
+
+@fixture
+def check_sample(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}', 'HEAD', *args, **kwargs)
+    return _
+
+
+@fixture
+def add_or_replace_qc_result(make_request):
+    def _(sample_id, qc_result, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'PUT', json=qc_result, *args, **kwargs)
+    return _
+
+
+@fixture
+def get_qc_result(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def delete_qc_result(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/qc-result', 'DELETE', *args, **kwargs)
+    return _
+
+
+@fixture
+def add_or_replace_status(make_request):
+    def _(sample_id, status, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'PUT', json=status, *args, **kwargs)
+    return _
+
+
+@fixture
+def update_status(make_request):
+    def _(sample_id, status, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'PATCH', json=status, *args, **kwargs)
+    return _
+
+
+@fixture
+def get_status(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def delete_status(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}/status', 'DELETE', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample():
     def _(sample_id):
-        sample = Sample(id=sample_id)
-        db.session.add(sample)
+        inst = Sample(id=sample_id)
+        db.session.add(inst)
         db.session.commit()
     return _
 
@@ -74,7 +165,16 @@ def create_sample():
 @fixture
 def delete_sample():
     def _(sample_id):
-        sample = Sample.query.get(sample_id)
-        db.session.delete(sample)
+        inst = Sample.query.get(sample_id)
+        db.session.delete(inst)
+        db.session.commit()
+    return _
+
+
+@fixture
+def create_file():
+    def _(model):
+        inst = File.from_model(model)
+        db.session.add(inst)
         db.session.commit()
     return _

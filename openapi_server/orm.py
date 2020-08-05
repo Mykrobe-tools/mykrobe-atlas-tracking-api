@@ -34,6 +34,45 @@ class Event(APIModelMixin, db.Model):
     api_model_class = models.Event
 
 
+class File(APIModelMixin, db.Model):
+    md5sum = Column(String, primary_key=True)
+    filename = Column(String)
+    file_type = Column(String)
+
+    sample_id = Column(String, ForeignKey('sample.id'))
+
+    api_model_class = models.File
+
+
+class QcResult(APIModelMixin, db.Model):
+    id = Column(Integer, primary_key=True)
+    coverage = Column(Integer)
+    tbc = Column(String)
+    decision = Column(String)
+
+    sample_id = Column(String, ForeignKey('sample.id'))
+
+    api_model_class = models.QcResult
+
+
+class Status(APIModelMixin, db.Model):
+    id = Column(Integer, primary_key=True)
+    de_contamination = Column(String)
+    qc = Column(String)
+    variant_calling = Column(String)
+    prediction = Column(String)
+    bigsi_building = Column(String)
+    distance_calculation = Column(String)
+    stage = Column(String)
+
+    sample_id = Column(String, ForeignKey('sample.id'))
+
+    api_model_class = models.Status
+
+
 class Sample(db.Model):
     id = Column(String, primary_key=True)
     events = db.relationship(Event, backref='sample')
+    files = db.relationship(File, backref='sample')
+    qc_result = db.relationship(QcResult, backref='sample', uselist=False)
+    status = db.relationship(Status, backref='sample', uselist=False)

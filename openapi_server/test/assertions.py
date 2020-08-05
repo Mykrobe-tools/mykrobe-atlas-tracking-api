@@ -24,11 +24,16 @@ def assert_equal_lists(a, b):
             assert x in b
 
 
-def assert_equal_events(a, b):
-    assert a.id == b.id
+def assert_equal_events(a, b, compare_id=True):
+    if compare_id:
+        assert a.id == b.id
     assert a.command == b.command
     assert a.duration == b.duration
     assert a.name == b.name
     assert a.software == b.software
     assert a.software_version == b.software_version
     assert_float_representations_equal(a.start_time, b.start_time)
+
+
+def assert_equal_resources(a, b, compare_id=True):
+    assert a == b

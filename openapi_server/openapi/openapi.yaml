@@ -743,20 +743,56 @@ components:
       type: object
     Status:
       example:
+        bigsi-building: pending
+        qc: pending
+        de-contamination: pending
+        distance-calculation: pending
         stage: accepted
+        prediction: pending
+        variant-calling: pending
       properties:
         de-contamination:
-          $ref: '#/components/schemas/ProcessingStatus'
+          enum:
+          - pending
+          - started
+          - complete
+          - failed
+          type: string
         qc:
-          $ref: '#/components/schemas/ProcessingStatus'
+          enum:
+          - pending
+          - started
+          - complete
+          - failed
+          type: string
         variant-calling:
-          $ref: '#/components/schemas/ProcessingStatus'
+          enum:
+          - pending
+          - started
+          - complete
+          - failed
+          type: string
         prediction:
-          $ref: '#/components/schemas/ProcessingStatus'
+          enum:
+          - pending
+          - started
+          - complete
+          - failed
+          type: string
         bigsi-building:
-          $ref: '#/components/schemas/ProcessingStatus'
+          enum:
+          - pending
+          - started
+          - complete
+          - failed
+          type: string
         distance-calculation:
-          $ref: '#/components/schemas/ProcessingStatus'
+          enum:
+          - pending
+          - started
+          - complete
+          - failed
+          type: string
         stage:
           enum:
           - accepted
@@ -772,13 +808,6 @@ components:
       - qc
       - variant-calling
       type: object
-    ProcessingStatus:
-      enum:
-      - pending
-      - started
-      - failed
-      - complete
-      type: string
     Error:
       properties:
         code:
