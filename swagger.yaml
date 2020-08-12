@@ -21,6 +21,42 @@ info:
 servers:
   - url: http://tracking-api-service/api/v1
 paths:
+  /samples:
+    post:
+      tags:
+        - sample
+      description: Add a new sample.
+      requestBody:
+        description: Sample to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sample'
+      responses:
+        201:
+          description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+              description: uri for the newly added sample
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+        409:
+          description: Already existed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /files/{md5sum}:
     get:
       tags:
@@ -589,6 +625,13 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Sample:
+      type: object
+      properties:
+        experiment-id:
+          type: string
+        isolate-id:
+          type: string
     File:
       type: object
       required:
