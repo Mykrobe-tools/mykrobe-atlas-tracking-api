@@ -44,7 +44,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/File'
+                $ref: '#/components/schemas/Sample'
         409:
           description: Already existed
           content:
@@ -631,6 +631,8 @@ components:
         experiment-id:
           type: string
         isolate-id:
+          type: string
+        sample-id:
           type: string
     File:
       type: object
