@@ -74,8 +74,8 @@ class Status(APIModelMixin, db.Model):
 
 
 class Sample(APIModelMixin, db.Model):
-    experiment_id = Column(String)
-    isolate_id = Column(String)
+    experiment_id = Column(String, unique=True)
+    isolate_id = Column(String, unique=True)
 
     # Create a PostgreSQL UUID column
     # as_uuid = True: In Python, this field will have the `uuid` type (instead of `str`)
