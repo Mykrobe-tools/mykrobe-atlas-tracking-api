@@ -2,7 +2,7 @@ from hashlib import md5
 
 from hypothesis.strategies import composite, text, integers, floats, sampled_from, characters
 
-from openapi_server.models import Event, QcResult, Status
+from openapi_server.models import Event, QcResult, Status, Sample
 from openapi_server.models.file import File
 
 
@@ -12,6 +12,14 @@ def int32s():
 
 def int64s():
     return integers(min_value=-2**63, max_value=2**63-1)
+
+
+@composite
+def samples(draw):
+    return Sample(
+        experiment_id=draw(text(alphabet=characters(whitelist_categories=('L', 'N')), min_size=1)),
+        isolate_id=draw(text(alphabet=characters(whitelist_categories=('L', 'N')), min_size=1))
+    )
 
 
 def sample_ids():

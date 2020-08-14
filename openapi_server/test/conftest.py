@@ -163,6 +163,13 @@ def create_sample():
 
 
 @fixture
+def create_sample_(make_request):
+    def _(sample, *args, **kwargs):
+        return make_request(f'/api/v1/samples', 'POST', json=sample, *args, **kwargs)
+    return _
+
+
+@fixture
 def delete_sample():
     def _(sample_id):
         inst = Sample.query.get(sample_id)

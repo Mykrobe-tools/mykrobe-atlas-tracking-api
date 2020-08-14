@@ -632,7 +632,7 @@ components:
           type: string
         isolate-id:
           type: string
-        sample-id:
+        id:
           type: string
     File:
       type: object

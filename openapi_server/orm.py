@@ -1,4 +1,7 @@
+import uuid
+
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 
 from openapi_server import models
 from openapi_server.db import db
@@ -70,9 +73,17 @@ class Status(APIModelMixin, db.Model):
     api_model_class = models.Status
 
 
-class Sample(db.Model):
-    id = Column(String, primary_key=True)
+class Sample(APIModelMixin, db.Model):
+    experiment_id = Column(String)
+    isolate_id = Column(String)
+
+    # Create a PostgreSQL UUID column
+    # as_uuid = True: In Python, this field will have the `uuid` type (instead of `str`)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+
     events = db.relationship(Event, backref='sample')
     files = db.relationship(File, backref='sample')
     qc_result = db.relationship(QcResult, backref='sample', uselist=False)
     status = db.relationship(Status, backref='sample', uselist=False)
+
+    api_model_class = models.Sample
