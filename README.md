@@ -1,3 +1,18 @@
+# Development
+## Prerequisites
+* Docker
+* Make sure the `pg_config` program is installed.
+  * For example, on Ubuntu, install the `libpq-dev` package.
+## Testing
+Start the test database:
+```
+make testdb
+```
+Run tests:
+```
+make test
+```
+
 # Deployment
 
 * The server inside the container listens on port `8080`.
