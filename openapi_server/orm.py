@@ -32,7 +32,7 @@ class Event(APIModelMixin, db.Model):
     software_version = Column(String)
     start_time = Column(Float)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID(as_uuid=True), ForeignKey('sample.id'))
 
     api_model_class = models.Event
 
@@ -42,7 +42,7 @@ class File(APIModelMixin, db.Model):
     filename = Column(String)
     file_type = Column(String)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID(as_uuid=True), ForeignKey('sample.id'))
 
     api_model_class = models.File
 
@@ -53,7 +53,7 @@ class QcResult(APIModelMixin, db.Model):
     tbc = Column(String)
     decision = Column(String)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID(as_uuid=True), ForeignKey('sample.id'))
 
     api_model_class = models.QcResult
 
@@ -68,7 +68,7 @@ class Status(APIModelMixin, db.Model):
     distance_calculation = Column(String)
     stage = Column(String)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID(as_uuid=True), ForeignKey('sample.id'))
 
     api_model_class = models.Status
 
