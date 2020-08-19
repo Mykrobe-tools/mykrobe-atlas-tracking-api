@@ -30,8 +30,20 @@ def test_creating_samples(sample, create_sample_, check_sample):
         assert created.experiment_id == sample.experiment_id
         assert created.isolate_id == sample.isolate_id
 
-        # response = check_sample(sample_id, created.md5sum)
-        # assert response.status_code == 200
-        #
-        # retrieved = File.from_dict(response.json)
-        # assert retrieved == created
+        response = check_sample(created.id)
+        assert response.status_code == 200
+
+
+@given(existed=samples(), duplicated_exp_id=samples(), duplicated_isolate_id=samples())
+def test_creating_duplicated_samples(existed, duplicated_exp_id, duplicated_isolate_id, create_sample_):
+    duplicated_exp_id.experiment_id = existed.experiment_id
+    duplicated_isolate_id.isolate_id = existed.isolate_id
+
+    with managed_db():
+        create_sample_(existed, ensure=True, success_code=201)
+
+        response = create_sample_(duplicated_exp_id)
+        assert response.status_code == 409
+
+        response = create_sample_(duplicated_isolate_id)
+        assert response.status_code == 409
