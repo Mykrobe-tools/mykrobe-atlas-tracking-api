@@ -154,18 +154,18 @@ def delete_status(make_request):
 
 
 @fixture
+def create_sample(make_request):
+    def _(sample, *args, **kwargs):
+        return make_request(f'/api/v1/samples', 'POST', json=sample, *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample_in_db():
     def _(sample_id):
         inst = Sample(id=sample_id)
         db.session.add(inst)
         db.session.commit()
-    return _
-
-
-@fixture
-def create_sample(make_request):
-    def _(sample, *args, **kwargs):
-        return make_request(f'/api/v1/samples', 'POST', json=sample, *args, **kwargs)
     return _
 
 
