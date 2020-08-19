@@ -154,7 +154,7 @@ def delete_status(make_request):
 
 
 @fixture
-def create_sample():
+def create_sample_in_db():
     def _(sample_id):
         inst = Sample(id=sample_id)
         db.session.add(inst)

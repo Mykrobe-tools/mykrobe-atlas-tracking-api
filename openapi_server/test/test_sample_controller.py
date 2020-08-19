@@ -12,9 +12,9 @@ def test_sample_id_does_not_exist(sample_id, check_sample):
 
 
 @given(sample_id=sample_ids())
-def test_sample_exists(sample_id, create_sample, check_sample):
+def test_sample_exists(sample_id, create_sample_in_db, check_sample):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
 
         response = check_sample(sample_id)
         assert response.status_code == 200
