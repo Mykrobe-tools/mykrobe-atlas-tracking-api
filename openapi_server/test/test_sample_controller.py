@@ -21,9 +21,9 @@ def test_sample_exists(sample_id, create_sample_in_db, check_sample):
 
 
 @given(sample=samples())
-def test_creating_samples(sample, create_sample_, check_sample):
+def test_creating_samples(sample, create_sample, check_sample):
     with managed_db():
-        response = create_sample_(sample)
+        response = create_sample(sample)
         created = Sample.from_dict(response.json)
 
         assert response.status_code == 201
@@ -35,15 +35,15 @@ def test_creating_samples(sample, create_sample_, check_sample):
 
 
 @given(existed=samples(), duplicated_exp_id=samples(), duplicated_isolate_id=samples())
-def test_creating_duplicated_samples(existed, duplicated_exp_id, duplicated_isolate_id, create_sample_):
+def test_creating_duplicated_samples(existed, duplicated_exp_id, duplicated_isolate_id, create_sample):
     duplicated_exp_id.experiment_id = existed.experiment_id
     duplicated_isolate_id.isolate_id = existed.isolate_id
 
     with managed_db():
-        create_sample_(existed, ensure=True, success_code=201)
+        create_sample(existed, ensure=True, success_code=201)
 
-        response = create_sample_(duplicated_exp_id)
+        response = create_sample(duplicated_exp_id)
         assert response.status_code == 409
 
-        response = create_sample_(duplicated_isolate_id)
+        response = create_sample(duplicated_isolate_id)
         assert response.status_code == 409

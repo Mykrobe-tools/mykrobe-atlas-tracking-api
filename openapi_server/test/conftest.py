@@ -163,7 +163,7 @@ def create_sample_in_db():
 
 
 @fixture
-def create_sample_(make_request):
+def create_sample(make_request):
     def _(sample, *args, **kwargs):
         return make_request(f'/api/v1/samples', 'POST', json=sample, *args, **kwargs)
     return _
