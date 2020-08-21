@@ -39,16 +39,14 @@ steps:
       - name: "ssh"
         path: /root/.ssh
 
-  - name: 'postgres'
-    args: ["-p", "5432:5432"]
-    env:
-    - "POSTGRES_HOST_AUTH_METHOD=trust"
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "$_E2E_TEST_IMAGE_REPOSITORY:$SHORT_SHA", "-f", "./images/cloudbuild.Dockerfile", "."]
 
-  - name: 'python:3.8'
+  - name: '$_E2E_TEST_IMAGE_REPOSITORY:$SHORT_SHA'
     entrypoint: "bash"
     args:
     - "-c"
-    - 'pip install -r requirements.txt && pip install -r test-requirements.txt && pip install . && pytest'
+    - 'pg_ctlcluster 11 main start && pip install -r requirements.txt && pip install -r test-requirements.txt && pip install . && pytest'
 
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "-t", "$_IMAGE_REPOSITORY:$SHORT_SHA", "-f", "./Dockerfile", "."]
@@ -60,5 +58,6 @@ steps:
 
 substitutions:
   _IMAGE_REPOSITORY: eu.gcr.io/atlas-275810/mykrobe-atlas-tracking-api
+  _E2E_TEST_IMAGE_REPOSITORY: eu.gcr.io/atlas-275810/mykrobe-atlas-tracking-api-e2e-test
   _BITBUCKET_SECRET: ms-bitbucket-readonly
   _GITHUB_SECRET: atlas-jsonschema-readonly
