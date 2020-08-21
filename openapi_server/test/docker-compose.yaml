@@ -9,4 +9,5 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
 
   app:
-    build: .
+    build: ../../
+    command: pytest
