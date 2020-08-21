@@ -39,6 +39,12 @@ steps:
       - name: "ssh"
         path: /root/.ssh
 
+  - name: 'postgres'
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - 'make testdb'
+
   - name: 'python:3.8'
     entrypoint: "bash"
     args:
