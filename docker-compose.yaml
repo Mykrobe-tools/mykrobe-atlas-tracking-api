@@ -1,3 +1,13 @@
-helloworld:
-  image: ubuntu
-  command: /bin/echo 'Hello world'
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  app:
+    image: python:3.8
+    command: pip install -r requirements.txt && pip install -r test-requirements.txt && pip install . && pytest
