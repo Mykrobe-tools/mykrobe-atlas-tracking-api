@@ -9,5 +9,4 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
 
   app:
-    image: python:3.8
-    command: ["pip", "install", "-r", "requirements.txt", "&&", "pip", "install", "-r", "test-requirements.txt", "&&", "pip", "install", ".", "&&", "pytest"]
+    build: .
