@@ -39,10 +39,8 @@ steps:
       - name: "ssh"
         path: /root/.ssh
 
-  - name: 'postgres'
-    args: ["-p", "5432:5432"]
-    env:
-    - "POSTGRES_HOST_AUTH_METHOD=trust"
+  - name: 'gcr.io/$PROJECT_ID/docker-compose'
+    args: ["up"]
 
   - name: 'python:3.8'
     entrypoint: "bash"
