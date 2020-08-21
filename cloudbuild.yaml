@@ -41,6 +41,7 @@ steps:
 
   - name: 'gcr.io/$PROJECT_ID/docker-compose'
     args: ["up"]
+    dir: "openapi_server/test"
 
 #  - name: 'python:3.8'
 #    entrypoint: "bash"
