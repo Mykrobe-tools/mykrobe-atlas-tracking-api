@@ -1,3 +1,5 @@
+# For Google Cloud Build only
+
 version: '3.1'
 
 services:
@@ -11,5 +13,9 @@ services:
       - "5432"
 
   app:
+    depends_on:
+      - db
     build: ../../
+    environment:
+      SQLALCHEMY_DATABASE_URI: "postgresql://postgres@db:5432"
     command: pytest

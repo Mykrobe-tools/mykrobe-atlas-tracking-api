@@ -1,4 +1,5 @@
 import logging
+import os
 
 import connexion
 from pytest import fixture
@@ -14,7 +15,7 @@ def client():
     app = connexion.App(__name__, specification_dir='../openapi/')
     app.app.json_encoder = JSONEncoder
 
-    app.app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres@localhost:5432'
+    app.app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres@localhost:5432')
     db.init_app(app.app)
     db.app = app.app
 
