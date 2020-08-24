@@ -2,6 +2,7 @@ import logging
 import os
 
 import connexion
+from hypothesis import settings
 from pytest import fixture
 
 from openapi_server.db import db
@@ -186,3 +187,7 @@ def create_file():
         db.session.add(inst)
         db.session.commit()
     return _
+
+
+settings.register_profile('e2e', deadline=None)
+settings.load_profile('e2e')
