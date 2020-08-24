@@ -30,8 +30,8 @@ def test_creating_samples(sample, create_sample, check_sample, get_resource):
         assert created.experiment_id == sample.experiment_id
         assert created.isolate_id == sample.isolate_id
 
-        # from_location_header = Sample.from_dict(get_resource(response.location, ensure=True).json)
-        # assert created == from_location_header
+        from_location_header = Sample.from_dict(get_resource(response.location, ensure=True).json)
+        assert created == from_location_header
 
         response = check_sample(created.id)
         assert response.status_code == 200
@@ -50,3 +50,21 @@ def test_creating_duplicated_samples(existed, duplicated_exp_id, duplicated_isol
 
         response = create_sample(duplicated_isolate_id)
         assert response.status_code == 409
+
+
+@given(sample_id=sample_ids())
+def test_getting_non_existent_samples(sample_id, get_sample):
+    assert get_sample(sample_id).status_code == 404
+
+
+@given(sample=samples())
+def test_getting_samples(sample, create_sample, get_sample):
+    with managed_db():
+        response = create_sample(sample, ensure=True, success_code=201)
+
+        response = get_sample(response.json['id'])
+        retrieved = Sample.from_dict(response.json)
+
+        assert response.status_code == 200, response.data.decode()
+        assert retrieved.experiment_id == sample.experiment_id
+        assert retrieved.isolate_id == sample.isolate_id

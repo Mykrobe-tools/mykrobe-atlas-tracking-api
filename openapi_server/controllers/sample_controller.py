@@ -7,6 +7,24 @@ from openapi_server.models import Sample
 from openapi_server.models.error import Error  # noqa: E501
 
 
+def samples_id_get(id):  # noqa: E501
+    """samples_id_get
+
+    Return a sample by its ID. # noqa: E501
+
+    :param id:
+    :type id: str
+
+    :rtype: Sample
+    """
+
+    resource = orm.Sample.query.get(id)
+    if not resource:
+        return Error(404, 'Not found'), 404
+
+    return resource.to_model(), 200
+
+
 def samples_id_head(id):  # noqa: E501
     """samples_id_head
 

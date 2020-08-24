@@ -163,6 +163,13 @@ def create_sample(make_request):
 
 
 @fixture
+def get_sample(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
 def get_resource(make_request):
     def _(uri, *args, **kwargs):
         return make_request(uri, 'GET', *args, **kwargs)

@@ -83,6 +83,39 @@ paths:
       - sample
       x-openapi-router-controller: openapi_server.controllers.sample_controller
   /samples/{id}:
+    get:
+      description: Return a sample by its ID.
+      operationId: samples_id_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sample'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample
+      x-openapi-router-controller: openapi_server.controllers.sample_controller
     head:
       description: Return if a sample with {id} exists.
       operationId: samples_id_head
