@@ -40,7 +40,7 @@ steps:
         path: /root/.ssh
 
   - name: gcr.io/cloud-builders/docker
-    args: ['run', '--name=testdb', '--network=cloudbuild', '--env=POSTGRES_HOST_AUTH_METHOD=trust', 'postgres']
+    args: ['run', '-d', '--name=testdb', '--network=cloudbuild', '--env=POSTGRES_HOST_AUTH_METHOD=trust', 'postgres']
   - name: 'python:3.8'
     entrypoint: "bash"
     args:
