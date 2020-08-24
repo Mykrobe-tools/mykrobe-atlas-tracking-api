@@ -5,9 +5,8 @@ RUN apt install -y --no-install-recommends libpq-dev build-essential
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt test-requirements.txt ./
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir -r test-requirements.txt
 
 COPY . .
 
