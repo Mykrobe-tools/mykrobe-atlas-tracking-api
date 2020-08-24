@@ -46,7 +46,7 @@ def test_adding_events_to_non_existent_sample(sample_id, event, add_event):
 
 
 @given(sample_id=sample_ids(), event=events(without_id=True))
-def test_adding_events(sample_id, event, create_sample_in_db, add_event, get_event):
+def test_adding_events(sample_id, event, create_sample_in_db, add_event, get_event, get_resource):
     with managed_db():
         create_sample_in_db(sample_id)
 
@@ -55,6 +55,9 @@ def test_adding_events(sample_id, event, create_sample_in_db, add_event, get_eve
 
         created = Event.from_dict(response.json)
         assert_equal_events(created, event, compare_id=False)
+
+        from_location_header = Event.from_dict(get_resource(response.location, ensure=True).json)
+        assert_equal_events(created, from_location_header)
 
         response = get_event(sample_id, created.id)
         assert response.status_code == 200

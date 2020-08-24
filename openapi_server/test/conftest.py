@@ -163,6 +163,13 @@ def create_sample(make_request):
 
 
 @fixture
+def get_resource(make_request):
+    def _(uri, *args, **kwargs):
+        return make_request(uri, 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
 def create_sample_in_db():
     def _(sample_id):
         inst = Sample(id=sample_id)

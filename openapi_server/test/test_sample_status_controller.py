@@ -12,7 +12,7 @@ def test_add_or_update_status_of_non_existent_sample(sample_id, status, add_or_r
 
 
 @given(sample_id=sample_ids(), status=statuses())
-def test_add_status(sample_id, status, create_sample_in_db, add_or_replace_status, get_status):
+def test_add_status(sample_id, status, create_sample_in_db, add_or_replace_status, get_status, get_resource):
     with managed_db():
         create_sample_in_db(sample_id)
 
@@ -22,6 +22,9 @@ def test_add_status(sample_id, status, create_sample_in_db, add_or_replace_statu
         assert response.status_code == 200, response.data.decode()
         assert added == status
 
+        from_location_header = Status.from_dict(get_resource(response.location, ensure=True).json)
+        assert added == from_location_header
+
         response = get_status(sample_id)
         retrieved = Status.from_dict(response.json)
 
@@ -30,7 +33,7 @@ def test_add_status(sample_id, status, create_sample_in_db, add_or_replace_statu
 
 
 @given(sample_id=sample_ids(), original=statuses(), new=statuses())
-def test_replace_status(sample_id, original, new, create_sample_in_db, add_or_replace_status, get_status):
+def test_replace_status(sample_id, original, new, create_sample_in_db, add_or_replace_status, get_status, get_resource):
     with managed_db():
         create_sample_in_db(sample_id)
         add_or_replace_status(sample_id, original, ensure=True)
@@ -40,6 +43,9 @@ def test_replace_status(sample_id, original, new, create_sample_in_db, add_or_re
 
         assert response.status_code == 200, response.data.decode()
         assert updated == new
+
+        from_location_header = Status.from_dict(get_resource(response.location, ensure=True).json)
+        assert updated == from_location_header
 
         response = get_status(sample_id)
         retrieved = Status.from_dict(response.json)
@@ -107,7 +113,7 @@ def test_update_status_of_non_existent_sample(sample_id, status, update_status):
 
 
 @given(sample_id=sample_ids(), original=statuses(), new=statuses())
-def test_update_status(sample_id, original, new, create_sample_in_db, add_or_replace_status, update_status, get_status):
+def test_update_status(sample_id, original, new, create_sample_in_db, add_or_replace_status, update_status, get_status, get_resource):
     new.stage = "deprecated"
 
     with managed_db():
@@ -119,6 +125,9 @@ def test_update_status(sample_id, original, new, create_sample_in_db, add_or_rep
 
         assert response.status_code == 200, response.data.decode()
         assert updated == new
+
+        from_location_header = Status.from_dict(get_resource(response.location, ensure=True).json)
+        assert updated == from_location_header
 
         response = get_status(sample_id)
         retrieved = Status.from_dict(response.json)

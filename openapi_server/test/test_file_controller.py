@@ -33,7 +33,7 @@ def test_adding_files_to_non_existent_sample(sample_id, file, add_file):
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_adding_files(sample_id, file, create_sample_in_db, add_file, get_file_of_sample):
+def test_adding_files(sample_id, file, create_sample_in_db, add_file, get_file_of_sample, get_resource):
     with managed_db():
         create_sample_in_db(sample_id)
 
@@ -42,6 +42,9 @@ def test_adding_files(sample_id, file, create_sample_in_db, add_file, get_file_o
 
         created = File.from_dict(response.json)
         assert created == file
+
+        from_location_header = File.from_dict(get_resource(response.location, ensure=True).json)
+        assert created == from_location_header
 
         response = get_file_of_sample(sample_id, created.md5sum)
         assert response.status_code == 200

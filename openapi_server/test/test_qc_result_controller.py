@@ -12,7 +12,7 @@ def test_add_or_update_qc_result_of_non_existent_sample(sample_id, qc_result, ad
 
 
 @given(sample_id=sample_ids(), qc_result=qc_results())
-def test_add_qc_result(sample_id, qc_result, create_sample_in_db, add_or_replace_qc_result, get_qc_result):
+def test_add_qc_result(sample_id, qc_result, create_sample_in_db, add_or_replace_qc_result, get_qc_result, get_resource):
     with managed_db():
         create_sample_in_db(sample_id)
 
@@ -22,6 +22,9 @@ def test_add_qc_result(sample_id, qc_result, create_sample_in_db, add_or_replace
         assert response.status_code == 200, response.data.decode()
         assert added == qc_result
 
+        from_location_header = QcResult.from_dict(get_resource(response.location, ensure=True).json)
+        assert added == from_location_header
+
         response = get_qc_result(sample_id)
         retrieved = QcResult.from_dict(response.json)
 
@@ -30,7 +33,7 @@ def test_add_qc_result(sample_id, qc_result, create_sample_in_db, add_or_replace
 
 
 @given(sample_id=sample_ids(), original=qc_results(), new=qc_results())
-def test_replace_qc_result(sample_id, original, new, create_sample_in_db, add_or_replace_qc_result, get_qc_result):
+def test_replace_qc_result(sample_id, original, new, create_sample_in_db, add_or_replace_qc_result, get_qc_result, get_resource):
     with managed_db():
         create_sample_in_db(sample_id)
         add_or_replace_qc_result(sample_id, original, ensure=True)
@@ -40,6 +43,9 @@ def test_replace_qc_result(sample_id, original, new, create_sample_in_db, add_or
 
         assert response.status_code == 200, response.data.decode()
         assert updated == new
+
+        from_location_header = QcResult.from_dict(get_resource(response.location, ensure=True).json)
+        assert updated == from_location_header
 
         response = get_qc_result(sample_id)
         retrieved = QcResult.from_dict(response.json)

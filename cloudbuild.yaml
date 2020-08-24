@@ -39,6 +39,7 @@ steps:
       - name: "ssh"
         path: /root/.ssh
 
+  # Run tests
   - name: gcr.io/cloud-builders/docker
     args: ['run', '-d', '--name=testdb', '--network=cloudbuild', '--env=POSTGRES_HOST_AUTH_METHOD=trust', 'postgres']
   - name: 'python:3.8'

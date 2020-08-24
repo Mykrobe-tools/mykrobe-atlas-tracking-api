@@ -101,4 +101,4 @@ def samples_id_events_post(id, event=None):  # noqa: E501
     db.session.add(inst)
     db.session.commit()
 
-    return inst.to_model(), 201
+    return inst.to_model(), 201, {'location': f'events/{inst.id}'}

@@ -21,7 +21,7 @@ def test_sample_exists(sample_id, create_sample_in_db, check_sample):
 
 
 @given(sample=samples())
-def test_creating_samples(sample, create_sample, check_sample):
+def test_creating_samples(sample, create_sample, check_sample, get_resource):
     with managed_db():
         response = create_sample(sample)
         created = Sample.from_dict(response.json)
@@ -29,6 +29,9 @@ def test_creating_samples(sample, create_sample, check_sample):
         assert response.status_code == 201
         assert created.experiment_id == sample.experiment_id
         assert created.isolate_id == sample.isolate_id
+
+        # from_location_header = Sample.from_dict(get_resource(response.location, ensure=True).json)
+        # assert created == from_location_header
 
         response = check_sample(created.id)
         assert response.status_code == 200
