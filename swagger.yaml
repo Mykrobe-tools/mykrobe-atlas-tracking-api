@@ -715,10 +715,14 @@ components:
       type: object
       required:
         - coverage
+        - number_of_het_snps
         - tbc
         - decision
       properties:
         coverage:
+          type: number
+          format: float
+        number_of_het_snps:
           type: integer
           format: int32
         tbc:
@@ -726,8 +730,8 @@ components:
         decision:
           type: string
           enum:
-            - pass
-            - fail
+            - passed
+            - failed
     Status:
       type: object
       required:
