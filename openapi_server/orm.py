@@ -1,8 +1,15 @@
+import uuid
+
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 
 from openapi_server import models
 from openapi_server.db import db
 from openapi_server.models.base_model_ import Model
+
+# Create a PostgreSQL UUID column
+# as_uuid = True: In Python, this field will have the `uuid` type (instead of `str`)
+UUID_TYPE = UUID(as_uuid=True)
 
 
 class APIModelMixin:
@@ -29,7 +36,7 @@ class Event(APIModelMixin, db.Model):
     software_version = Column(String)
     start_time = Column(Float)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID_TYPE, ForeignKey('sample.id'))
 
     api_model_class = models.Event
 
@@ -39,7 +46,7 @@ class File(APIModelMixin, db.Model):
     filename = Column(String)
     file_type = Column(String)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID_TYPE, ForeignKey('sample.id'))
 
     api_model_class = models.File
 
@@ -50,7 +57,7 @@ class QcResult(APIModelMixin, db.Model):
     tbc = Column(String)
     decision = Column(String)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID_TYPE, ForeignKey('sample.id'))
 
     api_model_class = models.QcResult
 
@@ -65,14 +72,20 @@ class Status(APIModelMixin, db.Model):
     distance_calculation = Column(String)
     stage = Column(String)
 
-    sample_id = Column(String, ForeignKey('sample.id'))
+    sample_id = Column(UUID_TYPE, ForeignKey('sample.id'))
 
     api_model_class = models.Status
 
 
-class Sample(db.Model):
-    id = Column(String, primary_key=True)
+class Sample(APIModelMixin, db.Model):
+    experiment_id = Column(String, unique=True)
+    isolate_id = Column(String, unique=True)
+
+    id = Column(UUID_TYPE, primary_key=True, default=uuid.uuid4)
+
     events = db.relationship(Event, backref='sample')
     files = db.relationship(File, backref='sample')
     qc_result = db.relationship(QcResult, backref='sample', uselist=False)
     status = db.relationship(Status, backref='sample', uselist=False)
+
+    api_model_class = models.Sample

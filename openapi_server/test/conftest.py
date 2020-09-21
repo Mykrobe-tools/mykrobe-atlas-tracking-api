@@ -1,6 +1,8 @@
 import logging
+import os
 
 import connexion
+from hypothesis import settings
 from pytest import fixture
 
 from openapi_server.db import db
@@ -14,7 +16,7 @@ def client():
     app = connexion.App(__name__, specification_dir='../openapi/')
     app.app.json_encoder = JSONEncoder
 
-    app.app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+    app.app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres@localhost:5432')
     db.init_app(app.app)
     db.app = app.app
 
@@ -154,7 +156,28 @@ def delete_status(make_request):
 
 
 @fixture
-def create_sample():
+def create_sample(make_request):
+    def _(sample, *args, **kwargs):
+        return make_request(f'/api/v1/samples', 'POST', json=sample, *args, **kwargs)
+    return _
+
+
+@fixture
+def get_sample(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}', 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def get_resource(make_request):
+    def _(uri, *args, **kwargs):
+        return make_request(uri, 'GET', *args, **kwargs)
+    return _
+
+
+@fixture
+def create_sample_in_db():
     def _(sample_id):
         inst = Sample(id=sample_id)
         db.session.add(inst)
@@ -178,3 +201,7 @@ def create_file():
         db.session.add(inst)
         db.session.commit()
     return _
+
+
+settings.register_profile('e2e', deadline=None)
+settings.load_profile('e2e')

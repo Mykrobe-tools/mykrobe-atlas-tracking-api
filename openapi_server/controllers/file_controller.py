@@ -124,4 +124,4 @@ def samples_id_files_post(id, file=None):  # noqa: E501
     except IntegrityError:
         return Error(409, 'Already existed'), 409
     else:
-        return inst.to_model(), 201
+        return inst.to_model(), 201, {'location': f'files/{inst.md5sum}'}

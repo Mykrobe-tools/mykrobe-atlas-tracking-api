@@ -70,7 +70,7 @@ def samples_id_status_patch(id, status=None):  # noqa: E501
 
     db.session.commit()
 
-    return sample.status.to_model(), 200
+    return sample.status.to_model(), 200, {'location': ''}
 
 
 def samples_id_status_put(id, status=None):  # noqa: E501
@@ -101,4 +101,4 @@ def samples_id_status_put(id, status=None):  # noqa: E501
         db.session.add(inst)
     db.session.commit()
 
-    return inst.to_model(), 200
+    return inst.to_model(), 200, {'location': ''}

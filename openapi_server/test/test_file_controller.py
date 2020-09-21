@@ -1,6 +1,6 @@
 import random
 
-from hypothesis import given
+from hypothesis import given, seed
 from hypothesis.strategies import lists, sets
 
 from openapi_server.models import File
@@ -33,15 +33,18 @@ def test_adding_files_to_non_existent_sample(sample_id, file, add_file):
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_adding_files(sample_id, file, create_sample, add_file, get_file_of_sample):
+def test_adding_files(sample_id, file, create_sample_in_db, add_file, get_file_of_sample, get_resource):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
 
         response = add_file(sample_id, file)
         assert response.status_code == 201
 
         created = File.from_dict(response.json)
         assert created == file
+
+        from_location_header = File.from_dict(get_resource(response.location, ensure=True).json)
+        assert created == from_location_header
 
         response = get_file_of_sample(sample_id, created.md5sum)
         assert response.status_code == 200
@@ -51,9 +54,9 @@ def test_adding_files(sample_id, file, create_sample, add_file, get_file_of_samp
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_adding_duplicated_files(sample_id, file, create_sample, add_file):
+def test_adding_duplicated_files(sample_id, file, create_sample_in_db, add_file):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
         add_file(sample_id, file, ensure=True)
 
         response = add_file(sample_id, file)
@@ -68,14 +71,14 @@ def test_listing_files_of_non_existent_sample(sample_id, list_files):
 
 @given(sample_id_pair=sets(sample_ids(), min_size=2, max_size=2),
        file_list=lists(files(), min_size=1, unique_by=lambda x: x.md5sum))
-def test_listing_files(sample_id_pair, file_list, create_sample, add_file,
-                        list_files):
+def test_listing_files(sample_id_pair, file_list, create_sample_in_db, add_file,
+                       list_files):
     sample_id, other_sample_id = sample_id_pair
     associated_files = random.sample(file_list, random.randrange(0, len(file_list)))
 
     with managed_db():
-        create_sample(sample_id)
-        create_sample(other_sample_id)
+        create_sample_in_db(sample_id)
+        create_sample_in_db(other_sample_id)
 
         for file in file_list:
             if file in associated_files:
@@ -91,9 +94,9 @@ def test_listing_files(sample_id_pair, file_list, create_sample, add_file,
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_getting_files_of_non_existent_samples(sample_id, file, get_file_of_sample, add_file, create_sample, delete_sample):
+def test_getting_files_of_non_existent_samples(sample_id, file, get_file_of_sample, add_file, create_sample_in_db, delete_sample):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
         add_file(sample_id, file, ensure=True)
         delete_sample(sample_id)
 
@@ -102,17 +105,17 @@ def test_getting_files_of_non_existent_samples(sample_id, file, get_file_of_samp
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_getting_non_existent_files(sample_id, file, get_file_of_sample, create_sample):
+def test_getting_non_existent_files(sample_id, file, get_file_of_sample, create_sample_in_db):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
         response = get_file_of_sample(sample_id, file.md5sum)
         assert response.status_code == 404
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_getting_files(sample_id, file, get_file_of_sample, add_file, create_sample):
+def test_getting_files(sample_id, file, get_file_of_sample, add_file, create_sample_in_db):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
         add_file(sample_id, file, ensure=True)
 
         response = get_file_of_sample(sample_id, file.md5sum)
@@ -132,17 +135,17 @@ def test_deleting_files_of_non_existent_samples(sample_id, file, delete_file, cr
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_deleting_non_existent_files(sample_id, file, delete_file, create_sample):
+def test_deleting_non_existent_files(sample_id, file, delete_file, create_sample_in_db):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
         response = delete_file(sample_id, file.md5sum)
         assert response.status_code == 404
 
 
 @given(sample_id=sample_ids(), file=files())
-def test_deleting_files(sample_id, file, delete_file, add_file, create_sample, get_file):
+def test_deleting_files(sample_id, file, delete_file, add_file, create_sample_in_db, get_file):
     with managed_db():
-        create_sample(sample_id)
+        create_sample_in_db(sample_id)
         add_file(sample_id, file, ensure=True)
 
         response = delete_file(sample_id, file.md5sum)

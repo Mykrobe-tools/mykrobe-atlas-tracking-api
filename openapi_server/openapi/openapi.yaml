@@ -42,7 +42,80 @@ paths:
       tags:
       - file
       x-openapi-router-controller: openapi_server.controllers.file_controller
+  /samples:
+    post:
+      description: Add a new sample.
+      operationId: samples_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sample'
+        description: Sample to be added
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sample'
+          description: Created
+          headers:
+            Location:
+              description: uri for the newly added sample
+              explode: false
+              schema:
+                type: string
+              style: simple
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Already existed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample
+      x-openapi-router-controller: openapi_server.controllers.sample_controller
   /samples/{id}:
+    get:
+      description: Return a sample by its ID.
+      operationId: samples_id_get
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sample'
+          description: OK
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample
+      x-openapi-router-controller: openapi_server.controllers.sample_controller
     head:
       description: Return if a sample with {id} exists.
       operationId: samples_id_head
@@ -660,6 +733,19 @@ paths:
       x-openapi-router-controller: openapi_server.controllers.sample_status_controller
 components:
   schemas:
+    Sample:
+      example:
+        isolate-id: isolate-id
+        id: id
+        experiment-id: experiment-id
+      properties:
+        experiment-id:
+          type: string
+        isolate-id:
+          type: string
+        id:
+          type: string
+      type: object
     File:
       example:
         file-type: fastq

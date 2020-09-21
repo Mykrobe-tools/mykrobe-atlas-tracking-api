@@ -73,4 +73,4 @@ def samples_id_qc_result_put(id, qc_result=None):  # noqa: E501
         db.session.add(inst)
     db.session.commit()
 
-    return inst.to_model(), 200
+    return inst.to_model(), 200, {'location': ''}

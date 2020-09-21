@@ -39,11 +39,16 @@ steps:
       - name: "ssh"
         path: /root/.ssh
 
+  # Run tests
+  - name: gcr.io/cloud-builders/docker
+    args: ['run', '-d', '--name=testdb', '--network=cloudbuild', '--env=POSTGRES_HOST_AUTH_METHOD=trust', 'postgres']
   - name: 'python:3.8'
     entrypoint: "bash"
     args:
     - "-c"
-    - 'pip install -r requirements.txt && pip install -r test-requirements.txt && pip install . && pytest'
+    - 'pip install -r requirements.txt && pip install -r test-requirements.txt && pip install . && SQLALCHEMY_DATABASE_URI=postgresql://postgres@testdb:5432 pytest'
+  - name: gcr.io/cloud-builders/docker
+    args: ['stop', 'testdb']
 
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "-t", "$_IMAGE_REPOSITORY:$SHORT_SHA", "-f", "./Dockerfile", "."]

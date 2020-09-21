@@ -1,8 +1,8 @@
 from hashlib import md5
 
-from hypothesis.strategies import composite, text, integers, floats, sampled_from, characters
+from hypothesis.strategies import composite, text, integers, floats, sampled_from, characters, uuids
 
-from openapi_server.models import Event, QcResult, Status
+from openapi_server.models import Event, QcResult, Status, Sample
 from openapi_server.models.file import File
 
 
@@ -10,12 +10,20 @@ def int32s():
     return integers(min_value=-2**31, max_value=2**31-1)
 
 
-def int64s():
-    return integers(min_value=-2**63, max_value=2**63-1)
+def safe_strings(*args, **kwargs):
+    return text(alphabet=characters(whitelist_categories=('L', 'N')), *args, **kwargs)
+
+
+@composite
+def samples(draw):
+    return Sample(
+        experiment_id=draw(safe_strings(min_size=1)),
+        isolate_id=draw(safe_strings(min_size=1))
+    )
 
 
 def sample_ids():
-    return text(alphabet=characters(whitelist_categories=('L', 'N')), min_size=1)
+    return uuids()
 
 
 @composite
@@ -25,14 +33,14 @@ def md5s(draw):
 
 @composite
 def events(draw, without_id=False):
-    event_id = None if without_id else draw(int64s())
+    event_id = None if without_id else draw(int32s())
     return Event(
         id=event_id,
-        command=draw(text()),
-        duration=draw(int64s()),
+        command=draw(safe_strings()),
+        duration=draw(int32s()),
         name=draw(sampled_from(['de-contamination', 'QC', 'variant-calling', 'prediction', 'bigsi-building', 'distance-calculation'])),
-        software=draw(text()),
-        software_version=draw(text()),
+        software=draw(safe_strings()),
+        software_version=draw(safe_strings()),
         start_time=draw(floats())
     )
 
@@ -41,7 +49,7 @@ def events(draw, without_id=False):
 def files(draw):
     return File(
         md5sum=draw(md5s()),
-        filename=draw(text()),
+        filename=draw(safe_strings()),
         file_type=draw(sampled_from(['fastq', 'vcf']))
     )
 
@@ -50,7 +58,7 @@ def files(draw):
 def qc_results(draw):
     return QcResult(
         coverage=draw(int32s()),
-        tbc=draw(text()),
+        tbc=draw(safe_strings()),
         decision=draw(sampled_from(['pass', 'fail']))
     )
 
