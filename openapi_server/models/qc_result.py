@@ -15,13 +15,11 @@ class QcResult(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, coverage=None, number_of_het_snps=None, tbc=None, decision=None):  # noqa: E501
+    def __init__(self, coverage=None, tbc=None, decision=None):  # noqa: E501
         """QcResult - a model defined in OpenAPI
 
         :param coverage: The coverage of this QcResult.  # noqa: E501
         :type coverage: float
-        :param number_of_het_snps: The number_of_het_snps of this QcResult.  # noqa: E501
-        :type number_of_het_snps: int
         :param tbc: The tbc of this QcResult.  # noqa: E501
         :type tbc: str
         :param decision: The decision of this QcResult.  # noqa: E501
@@ -29,20 +27,17 @@ class QcResult(Model):
         """
         self.openapi_types = {
             'coverage': float,
-            'number_of_het_snps': int,
             'tbc': str,
             'decision': str
         }
 
         self.attribute_map = {
             'coverage': 'coverage',
-            'number_of_het_snps': 'number_of_het_snps',
             'tbc': 'tbc',
             'decision': 'decision'
         }
 
         self._coverage = coverage
-        self._number_of_het_snps = number_of_het_snps
         self._tbc = tbc
         self._decision = decision
 
@@ -79,29 +74,6 @@ class QcResult(Model):
             raise ValueError("Invalid value for `coverage`, must not be `None`")  # noqa: E501
 
         self._coverage = coverage
-
-    @property
-    def number_of_het_snps(self):
-        """Gets the number_of_het_snps of this QcResult.
-
-
-        :return: The number_of_het_snps of this QcResult.
-        :rtype: int
-        """
-        return self._number_of_het_snps
-
-    @number_of_het_snps.setter
-    def number_of_het_snps(self, number_of_het_snps):
-        """Sets the number_of_het_snps of this QcResult.
-
-
-        :param number_of_het_snps: The number_of_het_snps of this QcResult.
-        :type number_of_het_snps: int
-        """
-        if number_of_het_snps is None:
-            raise ValueError("Invalid value for `number_of_het_snps`, must not be `None`")  # noqa: E501
-
-        self._number_of_het_snps = number_of_het_snps
 
     @property
     def tbc(self):
