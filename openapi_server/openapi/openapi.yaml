@@ -808,24 +808,25 @@ components:
       type: object
     QcResult:
       example:
-        coverage: 0
-        tbc: tbc
-        decision: pass
+        coverage: 0.8008282
+        decision: passed
+        number_of_het_snps: 6
       properties:
         coverage:
+          format: float
+          type: number
+        number_of_het_snps:
           format: int32
           type: integer
-        tbc:
-          type: string
         decision:
           enum:
-          - pass
-          - fail
+          - passed
+          - failed
           type: string
       required:
       - coverage
       - decision
-      - tbc
+      - number_of_het_snps
       type: object
     Status:
       example:

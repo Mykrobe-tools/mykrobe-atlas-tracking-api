@@ -53,8 +53,8 @@ class File(APIModelMixin, db.Model):
 
 class QcResult(APIModelMixin, db.Model):
     id = Column(Integer, primary_key=True)
-    coverage = Column(Integer)
-    tbc = Column(String)
+    coverage = Column(Float)
+    number_of_het_snps = Column(Integer)
     decision = Column(String)
 
     sample_id = Column(UUID_TYPE, ForeignKey('sample.id'))

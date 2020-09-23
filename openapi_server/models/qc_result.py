@@ -15,30 +15,30 @@ class QcResult(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, coverage=None, tbc=None, decision=None):  # noqa: E501
+    def __init__(self, coverage=None, number_of_het_snps=None, decision=None):  # noqa: E501
         """QcResult - a model defined in OpenAPI
 
         :param coverage: The coverage of this QcResult.  # noqa: E501
-        :type coverage: int
-        :param tbc: The tbc of this QcResult.  # noqa: E501
-        :type tbc: str
+        :type coverage: float
+        :param number_of_het_snps: The number_of_het_snps of this QcResult.  # noqa: E501
+        :type number_of_het_snps: int
         :param decision: The decision of this QcResult.  # noqa: E501
         :type decision: str
         """
         self.openapi_types = {
-            'coverage': int,
-            'tbc': str,
+            'coverage': float,
+            'number_of_het_snps': int,
             'decision': str
         }
 
         self.attribute_map = {
             'coverage': 'coverage',
-            'tbc': 'tbc',
+            'number_of_het_snps': 'number_of_het_snps',
             'decision': 'decision'
         }
 
         self._coverage = coverage
-        self._tbc = tbc
+        self._number_of_het_snps = number_of_het_snps
         self._decision = decision
 
     @classmethod
@@ -58,7 +58,7 @@ class QcResult(Model):
 
 
         :return: The coverage of this QcResult.
-        :rtype: int
+        :rtype: float
         """
         return self._coverage
 
@@ -68,7 +68,7 @@ class QcResult(Model):
 
 
         :param coverage: The coverage of this QcResult.
-        :type coverage: int
+        :type coverage: float
         """
         if coverage is None:
             raise ValueError("Invalid value for `coverage`, must not be `None`")  # noqa: E501
@@ -76,27 +76,27 @@ class QcResult(Model):
         self._coverage = coverage
 
     @property
-    def tbc(self):
-        """Gets the tbc of this QcResult.
+    def number_of_het_snps(self):
+        """Gets the number_of_het_snps of this QcResult.
 
 
-        :return: The tbc of this QcResult.
-        :rtype: str
+        :return: The number_of_het_snps of this QcResult.
+        :rtype: int
         """
-        return self._tbc
+        return self._number_of_het_snps
 
-    @tbc.setter
-    def tbc(self, tbc):
-        """Sets the tbc of this QcResult.
+    @number_of_het_snps.setter
+    def number_of_het_snps(self, number_of_het_snps):
+        """Sets the number_of_het_snps of this QcResult.
 
 
-        :param tbc: The tbc of this QcResult.
-        :type tbc: str
+        :param number_of_het_snps: The number_of_het_snps of this QcResult.
+        :type number_of_het_snps: int
         """
-        if tbc is None:
-            raise ValueError("Invalid value for `tbc`, must not be `None`")  # noqa: E501
+        if number_of_het_snps is None:
+            raise ValueError("Invalid value for `number_of_het_snps`, must not be `None`")  # noqa: E501
 
-        self._tbc = tbc
+        self._number_of_het_snps = number_of_het_snps
 
     @property
     def decision(self):
@@ -116,7 +116,7 @@ class QcResult(Model):
         :param decision: The decision of this QcResult.
         :type decision: str
         """
-        allowed_values = ["pass", "fail"]  # noqa: E501
+        allowed_values = ["passed", "failed"]  # noqa: E501
         if decision not in allowed_values:
             raise ValueError(
                 "Invalid value for `decision` ({0}), must be one of {1}"
