@@ -58,6 +58,8 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "$_IMAGE_REPOSITORY:$SHORT_SHA"]
 
+timeout: 15m
+
 substitutions:
   _IMAGE_REPOSITORY: eu.gcr.io/atlas-275810/mykrobe-atlas-tracking-api
   _BITBUCKET_SECRET: ms-bitbucket-readonly

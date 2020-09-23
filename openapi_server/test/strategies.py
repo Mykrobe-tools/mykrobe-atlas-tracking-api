@@ -59,7 +59,6 @@ def qc_results(draw):
     return QcResult(
         coverage=draw(floats(allow_nan=False)),
         number_of_het_snps=draw(int32s()),
-        tbc=draw(safe_strings()),
         decision=draw(sampled_from(['passed', 'failed']))
     )
 

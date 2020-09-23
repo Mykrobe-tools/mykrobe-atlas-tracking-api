@@ -809,7 +809,6 @@ components:
     QcResult:
       example:
         coverage: 0.8008282
-        tbc: tbc
         decision: passed
         number_of_het_snps: 6
       properties:
@@ -819,8 +818,6 @@ components:
         number_of_het_snps:
           format: int32
           type: integer
-        tbc:
-          type: string
         decision:
           enum:
           - passed
@@ -830,7 +827,6 @@ components:
       - coverage
       - decision
       - number_of_het_snps
-      - tbc
       type: object
     Status:
       example:

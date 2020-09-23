@@ -55,7 +55,6 @@ class QcResult(APIModelMixin, db.Model):
     id = Column(Integer, primary_key=True)
     coverage = Column(Float)
     number_of_het_snps = Column(Integer)
-    tbc = Column(String)
     decision = Column(String)
 
     sample_id = Column(UUID_TYPE, ForeignKey('sample.id'))

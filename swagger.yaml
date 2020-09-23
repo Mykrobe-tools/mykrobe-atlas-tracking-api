@@ -716,7 +716,6 @@ components:
       required:
         - coverage
         - number_of_het_snps
-        - tbc
         - decision
       properties:
         coverage:
@@ -725,8 +724,6 @@ components:
         number_of_het_snps:
           type: integer
           format: int32
-        tbc:
-          type: string
         decision:
           type: string
           enum:
