@@ -3,7 +3,6 @@ from sqlalchemy.exc import IntegrityError
 
 from openapi_server import orm
 from openapi_server.db import db
-from openapi_server.input_validators import validate_sample_id
 from openapi_server.models import Sample
 from openapi_server.models.error import Error  # noqa: E501
 
@@ -18,8 +17,6 @@ def samples_id_get(id):  # noqa: E501
 
     :rtype: Sample
     """
-
-    validate_sample_id(id)
 
     resource = orm.Sample.query.get(id)
     if not resource:
@@ -38,8 +35,6 @@ def samples_id_head(id):  # noqa: E501
 
     :rtype: None
     """
-
-    validate_sample_id(id)
 
     resource = orm.Sample.query.get(id)
     if not resource:

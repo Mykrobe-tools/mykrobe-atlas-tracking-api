@@ -9,6 +9,8 @@ from openapi_server.models.base_model_ import Model
 
 # Create a PostgreSQL UUID column
 # as_uuid = True: In Python, this field will have the `uuid` type (instead of `str`)
+from openapi_server.query_classes import SampleQueryClass
+
 UUID_TYPE = UUID(as_uuid=True)
 
 
@@ -89,3 +91,5 @@ class Sample(APIModelMixin, db.Model):
     status = db.relationship(Status, backref='sample', uselist=False)
 
     api_model_class = models.Sample
+
+    query_class = SampleQueryClass

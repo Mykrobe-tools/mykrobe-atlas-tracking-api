@@ -2,7 +2,6 @@ import connexion
 
 from openapi_server import orm
 from openapi_server.db import db
-from openapi_server.input_validators import validate_sample_id
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.qc_result import QcResult  # noqa: E501
 
@@ -17,8 +16,6 @@ def samples_id_qc_result_delete(id):  # noqa: E501
 
     :rtype: None
     """
-
-    validate_sample_id(id)
 
     sample = orm.Sample.query.get(id)
     if not sample or not sample.qc_result:
@@ -41,8 +38,6 @@ def samples_id_qc_result_get(id):  # noqa: E501
     :rtype: QcResult
     """
 
-    validate_sample_id(id)
-
     sample = orm.Sample.query.get(id)
     if not sample or not sample.qc_result:
         return Error(404, 'Not found'), 404
@@ -64,8 +59,6 @@ def samples_id_qc_result_put(id, qc_result=None):  # noqa: E501
     """
     if connexion.request.is_json:
         qc_result = QcResult.from_dict(connexion.request.get_json())  # noqa: E501
-
-    validate_sample_id(id)
 
     sample = orm.Sample.query.get(id)
     if not sample:
