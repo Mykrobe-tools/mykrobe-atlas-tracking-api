@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from openapi_server.app import create_app
+from openapi_server.factories.app import create_app
 
 
 def main():

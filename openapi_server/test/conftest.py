@@ -1,15 +1,10 @@
 import logging
-import os
 
-import connexion
 from hypothesis import settings
 from pytest import fixture
-from werkzeug.exceptions import InternalServerError
 
-from openapi_server.app import create_app
-from openapi_server.db import db
-from openapi_server.encoder import JSONEncoder
-from openapi_server.error_handlers import internal_server_error_handler
+from openapi_server.factories.app import create_app
+from openapi_server.factories.db import db
 from openapi_server.orm import Sample, File
 
 

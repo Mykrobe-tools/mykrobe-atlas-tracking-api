@@ -2,7 +2,7 @@ import connexion
 from sqlalchemy.exc import IntegrityError
 
 from openapi_server import orm
-from openapi_server.db import db
+from openapi_server.factories.db import db
 from openapi_server.models import Sample
 from openapi_server.models.error import Error  # noqa: E501
 
