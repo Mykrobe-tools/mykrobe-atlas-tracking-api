@@ -2,6 +2,7 @@ import connexion
 
 from openapi_server import orm
 from openapi_server.db import db
+from openapi_server.input_validators import validate_sample_id
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.event import Event  # noqa: E501
 
@@ -18,6 +19,8 @@ def samples_id_events_event_id_delete(id, eventId):  # noqa: E501
 
     :rtype: None
     """
+
+    validate_sample_id(id)
 
     sample = orm.Sample.query.get(id)
     if not sample:
@@ -45,6 +48,8 @@ def samples_id_events_event_id_get(id, eventId):  # noqa: E501
     :rtype: Event
     """
 
+    validate_sample_id(id)
+
     sample = orm.Sample.query.get(id)
     if not sample:
         return Error(404, 'Not found'), 404
@@ -66,6 +71,8 @@ def samples_id_events_get(id):  # noqa: E501
 
     :rtype: List[Event]
     """
+
+    validate_sample_id(id)
 
     sample = orm.Sample.query.get(id)
     if not sample:
@@ -90,6 +97,8 @@ def samples_id_events_post(id, event=None):  # noqa: E501
     """
     if connexion.request.is_json:
         event = Event.from_dict(connexion.request.get_json())  # noqa: E501
+
+    validate_sample_id(id)
 
     sample = orm.Sample.query.get(id)
     if not sample:

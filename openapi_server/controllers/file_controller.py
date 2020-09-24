@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from openapi_server import orm
 from openapi_server.db import db
+from openapi_server.input_validators import validate_sample_id
 from openapi_server.models import File
 from openapi_server.models.error import Error  # noqa: E501
 
@@ -36,6 +37,8 @@ def samples_id_files_get(id):  # noqa: E501
     :rtype: List[File]
     """
 
+    validate_sample_id(id)
+
     sample = orm.Sample.query.get(id)
     if not sample:
         return Error(404, 'Not found'), 404
@@ -57,6 +60,8 @@ def samples_id_files_md5sum_delete(id, md5sum):  # noqa: E501
 
     :rtype: None
     """
+
+    validate_sample_id(id)
 
     sample = orm.Sample.query.get(id)
     if not sample:
@@ -85,6 +90,8 @@ def samples_id_files_md5sum_get(id, md5sum):  # noqa: E501
     :rtype: File
     """
 
+    validate_sample_id(id)
+
     sample = orm.Sample.query.get(id)
     if not sample:
         return Error(404, 'Not found'), 404
@@ -110,6 +117,8 @@ def samples_id_files_post(id, file=None):  # noqa: E501
     """
     if connexion.request.is_json:
         file = File.from_dict(connexion.request.get_json())  # noqa: E501
+
+    validate_sample_id(id)
 
     primary = orm.Sample.query.get(id)
     if not primary:
