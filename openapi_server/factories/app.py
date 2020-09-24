@@ -5,7 +5,7 @@ from werkzeug.exceptions import InternalServerError
 
 from openapi_server import encoder
 from openapi_server.factories.db import db
-from openapi_server.error_handlers import internal_server_error_handler
+from openapi_server.utils.error_handlers import internal_server_error_handler
 
 
 def create_app():

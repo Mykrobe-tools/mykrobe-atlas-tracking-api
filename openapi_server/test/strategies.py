@@ -23,7 +23,7 @@ def samples(draw):
 
 
 def sample_ids():
-    return uuids()
+    return uuids().map(lambda x: str(x))
 
 
 @composite
