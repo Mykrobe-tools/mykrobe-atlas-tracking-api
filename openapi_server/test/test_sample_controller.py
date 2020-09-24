@@ -1,8 +1,10 @@
-from hypothesis import given
+from uuid import UUID
+
+from hypothesis import given, assume, settings, HealthCheck
 
 from openapi_server.models import Sample
 from openapi_server.test.context_managers import managed_db
-from openapi_server.test.strategies import sample_ids, samples
+from openapi_server.test.strategies import sample_ids, samples, safe_strings
 
 
 @given(sample_id=sample_ids())
@@ -55,6 +57,21 @@ def test_creating_duplicated_samples(existed, duplicated_exp_id, duplicated_isol
 @given(sample_id=sample_ids())
 def test_getting_non_existent_samples(sample_id, get_sample):
     assert get_sample(sample_id).status_code == 404
+
+
+@settings(suppress_health_check=(HealthCheck.filter_too_much,))
+@given(sample_id=safe_strings(min_size=1))
+def test_invalid_sample_id(sample_id, get_sample):
+    def is_uuid(s):
+        try:
+            UUID(s, version=4)
+        except ValueError:
+            return False
+        else:
+            return True
+    assume(not is_uuid(sample_id))
+
+    assert get_sample(sample_id).status_code == 400
 
 
 @given(sample=samples())

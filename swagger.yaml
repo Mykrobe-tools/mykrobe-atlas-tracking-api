@@ -663,6 +663,7 @@ components:
           type: string
         id:
           type: string
+          #format: uuid # TODO: In the future, when OpenAPI's server generator for Python can generate validator for this format, remove our manual one
     File:
       type: object
       required:
