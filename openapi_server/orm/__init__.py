@@ -9,7 +9,7 @@ from openapi_server.models.base_model_ import Model
 
 # Create a PostgreSQL UUID column
 # as_uuid = True: In Python, this field will have the `uuid` type (instead of `str`)
-from openapi_server.query_classes import SampleQueryClass
+from openapi_server.orm.query_classes import SampleQueryClass
 
 UUID_TYPE = UUID(as_uuid=True)
 
