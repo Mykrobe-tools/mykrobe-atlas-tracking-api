@@ -92,9 +92,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "200":
@@ -127,9 +125,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "204":
@@ -159,9 +155,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "200":
@@ -196,9 +190,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       requestBody:
         content:
@@ -246,9 +238,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       - explode: false
         in: path
@@ -284,9 +274,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       - explode: false
         in: path
@@ -327,9 +315,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "200":
@@ -364,9 +350,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       requestBody:
         content:
@@ -420,9 +404,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       - explode: false
         in: path
@@ -458,9 +440,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       - explode: false
         in: path
@@ -501,9 +481,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "204":
@@ -532,9 +510,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "200":
@@ -567,9 +543,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       requestBody:
         content:
@@ -617,9 +591,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "204":
@@ -648,9 +620,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
         "200":
@@ -683,9 +653,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       requestBody:
         content:
@@ -725,9 +693,7 @@ paths:
         name: id
         required: true
         schema:
-          format: uuid
-          pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
-          type: string
+          $ref: '#/components/schemas/SampleID'
         style: simple
       requestBody:
         content:
@@ -767,6 +733,10 @@ paths:
       x-openapi-router-controller: openapi_server.controllers.sample_status_controller
 components:
   schemas:
+    SampleID:
+      format: uuid
+      pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+      type: string
     Sample:
       example:
         isolate-id: isolate-id
