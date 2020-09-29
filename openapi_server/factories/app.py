@@ -17,7 +17,6 @@ def create_app():
     db.app = app.app
 
     app.add_api('openapi.yaml', arguments={'title': 'Tracking API'})
-    db.create_all()
 
     app.add_error_handler(InternalServerError, internal_server_error_handler)
 
