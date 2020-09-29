@@ -12,6 +12,7 @@ from openapi_server.orm import Sample, File
 def app():
     logging.getLogger('connexion.operation').setLevel('ERROR')
     app = create_app()
+    db.create_all()
     return app
 
 
