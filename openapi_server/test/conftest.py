@@ -1,28 +1,22 @@
 import logging
-import os
 
-import connexion
 from hypothesis import settings
 from pytest import fixture
 
-from openapi_server.db import db
-from openapi_server.encoder import JSONEncoder
+from openapi_server.factories.app import create_app
+from openapi_server.factories.db import db
 from openapi_server.orm import Sample, File
 
 
 @fixture
-def client():
+def app():
     logging.getLogger('connexion.operation').setLevel('ERROR')
-    app = connexion.App(__name__, specification_dir='../openapi/')
-    app.app.json_encoder = JSONEncoder
+    app = create_app()
+    return app
 
-    app.app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres@localhost:5432')
-    db.init_app(app.app)
-    db.app = app.app
 
-    app.add_api('openapi.yaml')
-    db.create_all()
-
+@fixture
+def client(app):
     return app.app.test_client()
 
 
@@ -31,7 +25,7 @@ def make_request(client):
     def _(path, method, json=None, ensure=False, success_code=200):
         response = client.open(path=path, method=method, json=json)
         if ensure:
-            assert response.status_code == success_code
+            assert response.status_code == success_code, response.data.decode()
         return response
     return _
 

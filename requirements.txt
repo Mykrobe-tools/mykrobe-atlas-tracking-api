@@ -10,4 +10,4 @@ python_dateutil >= 2.6.0
 setuptools >= 21.0.0
 
 Flask-SQLAlchemy == 2.4.3
-psycopg2-binary==2.8.6
+psycopg2-binary == 2.8.6

@@ -4,11 +4,12 @@ from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 
 from openapi_server import models
-from openapi_server.db import db
+from openapi_server.factories.db import db
 from openapi_server.models.base_model_ import Model
 
 # Create a PostgreSQL UUID column
 # as_uuid = True: In Python, this field will have the `uuid` type (instead of `str`)
+
 UUID_TYPE = UUID(as_uuid=True)
 
 
