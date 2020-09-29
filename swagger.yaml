@@ -98,6 +98,8 @@ paths:
             required: true
             schema:
               type: string
+              format: uuid
+              pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         204:
           description: OK
@@ -123,6 +125,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         200:
           description: OK
@@ -153,6 +157,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         200:
           description: OK
@@ -184,6 +190,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       requestBody:
         description: File to be added
         required: true
@@ -232,6 +240,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
         - name: md5sum
           in: path
           required: true
@@ -266,6 +276,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
         - name: md5sum
           in: path
           required: true
@@ -297,6 +309,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         200:
           description: OK
@@ -328,6 +342,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       requestBody:
         description: Event to be added
         required: true
@@ -370,6 +386,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
         - name: eventId
           in: path
           required: true
@@ -404,6 +422,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
         - name: eventId
           in: path
           required: true
@@ -435,6 +455,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         200:
           description: OK
@@ -464,6 +486,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       requestBody:
         description: QC result to be added
         required: true
@@ -505,6 +529,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         204:
           description: Deleted
@@ -531,6 +557,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         200:
           description: OK
@@ -560,6 +588,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       requestBody:
         description: Status to be added.
         required: true
@@ -601,6 +631,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       requestBody:
         description: Status to be added
         required: true
@@ -637,6 +669,8 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
+            pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
       responses:
         204:
           description: Deleted
@@ -663,7 +697,8 @@ components:
           type: string
         id:
           type: string
-          #format: uuid # TODO: In the future, when OpenAPI's server generator for Python can generate validator for this format, remove our manual one
+          format: uuid
+          pattern: '^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$'
     File:
       type: object
       required:
