@@ -3,6 +3,7 @@ import logging
 from hypothesis import settings
 from pytest import fixture
 
+from openapi_server.create_db import create_db
 from openapi_server.factories.app import create_app
 from openapi_server.factories.db import db
 from openapi_server.orm import Sample, File
@@ -12,7 +13,9 @@ from openapi_server.orm import Sample, File
 def app():
     logging.getLogger('connexion.operation').setLevel('ERROR')
     app = create_app()
-    db.create_all()
+
+    create_db(app)
+
     return app
 
 
