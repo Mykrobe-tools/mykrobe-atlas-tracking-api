@@ -9,9 +9,14 @@ from openapi_server.orm import Sample, File
 
 
 @fixture
-def client():
+def app():
     logging.getLogger('connexion.operation').setLevel('ERROR')
     app = create_app()
+    return app
+
+
+@fixture
+def client(app):
     return app.app.test_client()
 
 
@@ -20,7 +25,7 @@ def make_request(client):
     def _(path, method, json=None, ensure=False, success_code=200):
         response = client.open(path=path, method=method, json=json)
         if ensure:
-            assert response.status_code == success_code
+            assert response.status_code == success_code, response.data.decode()
         return response
     return _
 
