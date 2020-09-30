@@ -1,7 +1,7 @@
 import connexion
 
 from openapi_server import orm
-from openapi_server.factories.db import db
+from openapi_server.db import db
 from openapi_server.models.error import Error  # noqa: E501
 from openapi_server.models.event import Event  # noqa: E501
 

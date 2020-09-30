@@ -4,7 +4,7 @@ from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 
 from openapi_server import models
-from openapi_server.factories.db import db
+from openapi_server.db import db
 from openapi_server.models.base_model_ import Model
 
 # Create a PostgreSQL UUID column
