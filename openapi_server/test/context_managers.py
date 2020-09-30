@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 
-from openapi_server.factories.db import db
+from openapi_server.db import db
 
 
 @contextmanager
