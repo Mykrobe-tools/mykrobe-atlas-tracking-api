@@ -15,6 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 FROM python:3.8.3-slim-buster
 COPY --from=compile-image /opt/venv /opt/venv
 
+WORKDIR /usr/src/app
 COPY . .
 
 ENV PATH="/opt/venv/bin:$PATH"

@@ -2,7 +2,7 @@ generate:
 	java -jar scripts/openapi-generator.jar generate -i swagger.yaml -g python-flask
 
 build:
-	docker build -t track .
+	docker-compose build
 
 run:
 	docker-compose up
