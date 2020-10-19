@@ -5,7 +5,7 @@ build:
 	docker build -t track .
 
 run:
-	docker run --rm -p 8080:8080 track
+	docker-compose up
 
 type_check:
 	mypy openapi_server
