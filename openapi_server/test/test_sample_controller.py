@@ -1,8 +1,14 @@
-from hypothesis import given
+import random
+
+from hypothesis import given, assume
 
 from openapi_server.models import Sample
 from openapi_server.test.context_managers import managed_db
 from openapi_server.test.strategies import sample_ids, samples
+
+
+SAMPLE_PROPS = ['experiment_id', 'isolate_id']
+SAMPLE_UNIQUE_PROPS = ['experiment_id', 'isolate_id']
 
 
 @given(sample_id=sample_ids())
@@ -68,3 +74,51 @@ def test_getting_samples(sample, create_sample, get_sample):
         assert response.status_code == 200, response.data.decode()
         assert retrieved.experiment_id == sample.experiment_id
         assert retrieved.isolate_id == sample.isolate_id
+
+
+@given(sample_id=sample_ids(), sample=samples())
+def test_patching_non_existent_samples(sample_id, sample, patch_sample):
+    assert patch_sample(sample_id, sample).status_code == 404
+
+
+@given(old_sample=samples(), another_sample=samples(), new_sample=samples())
+def test_patching_samples_with_existing_unique_properties(old_sample, another_sample, new_sample, patch_sample, create_sample, get_sample):
+    assume(old_sample.experiment_id != another_sample.experiment_id)
+    assume(old_sample.isolate_id != another_sample.isolate_id)
+
+    with managed_db():
+        created = Sample.from_dict(create_sample(old_sample, ensure=True, success_code=201).json)
+        create_sample(another_sample, ensure=True, success_code=201)
+
+        prop = random.choice(SAMPLE_UNIQUE_PROPS)
+        setattr(new_sample, prop, getattr(another_sample, prop))
+
+        assert patch_sample(created.id, new_sample).status_code == 409
+
+        retrieved = Sample.from_dict(get_sample(created.id, ensure=True).json)
+        assert retrieved.experiment_id == old_sample.experiment_id
+        assert retrieved.isolate_id == old_sample.isolate_id
+
+
+@given(old_sample=samples(), new_sample=samples())
+def test_patching_samples(old_sample, new_sample, patch_sample, create_sample, get_sample):
+    to_keep = random.sample(SAMPLE_PROPS, random.randrange(0, len(SAMPLE_PROPS)))
+
+    with managed_db():
+        created = Sample.from_dict(create_sample(old_sample, ensure=True, success_code=201).json)
+
+        for prop in to_keep:
+            setattr(new_sample, prop, None)
+
+        response = patch_sample(created.id, new_sample)
+        patched = Sample.from_dict(response.json)
+
+        assert response.status_code == 200
+        for prop in SAMPLE_PROPS:
+            if prop in to_keep:
+                assert getattr(patched, prop) == getattr(old_sample, prop)
+            else:
+                assert getattr(patched, prop) == getattr(new_sample, prop)
+
+        retrieved = Sample.from_dict(get_sample(created.id, ensure=True).json)
+        assert retrieved == patched
