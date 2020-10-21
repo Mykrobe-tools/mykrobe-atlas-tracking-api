@@ -96,4 +96,4 @@ def samples_id_patch(id, new_sample=None):  # noqa: E501
     except IntegrityError:
         return Error(409, 'Already existed'), 409
     else:
-        return old_sample.to_model(), 200, {'location': f'samples/{old_sample.id}'}
+        return old_sample.to_model(), 200
