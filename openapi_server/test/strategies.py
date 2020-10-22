@@ -15,10 +15,10 @@ def safe_strings(*args, **kwargs):
 
 
 @composite
-def samples(draw):
+def samples(draw, has_experiment_id=True, has_isolate_id=True):
     return Sample(
-        experiment_id=draw(safe_strings(min_size=1)),
-        isolate_id=draw(safe_strings(min_size=1))
+        experiment_id=draw(safe_strings(min_size=1)) if has_experiment_id else None,
+        isolate_id=draw(safe_strings(min_size=1)) if has_isolate_id else None
     )
 
 

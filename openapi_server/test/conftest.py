@@ -3,9 +3,9 @@ import logging
 from hypothesis import settings
 from pytest import fixture
 
-from openapi_server.migrate import migrate
-from openapi_server.factories.app import create_app
 from openapi_server.db import db
+from openapi_server.factories.app import create_app
+from openapi_server.migrate import migrate
 from openapi_server.orm import Sample, File
 
 
@@ -26,8 +26,8 @@ def client(app):
 
 @fixture
 def make_request(client):
-    def _(path, method, json=None, ensure=False, success_code=200):
-        response = client.open(path=path, method=method, json=json)
+    def _(path, method, json=None, ensure=False, success_code=200, query_params=None):
+        response = client.open(path=path, method=method, json=json, query_string=query_params)
         if ensure:
             assert response.status_code == success_code, response.data.decode()
         return response
@@ -157,6 +157,19 @@ def delete_status(make_request):
 def create_sample(make_request):
     def _(sample, *args, **kwargs):
         return make_request(f'/api/v1/samples', 'POST', json=sample, *args, **kwargs)
+    return _
+
+
+@fixture
+def list_samples(make_request):
+    def _(has_experiment_id=None, has_isolate_id=None, *args, **kwargs):
+        query_params = {}
+        if has_experiment_id is not None:
+            query_params['has_experiment_id'] = has_experiment_id
+        if has_isolate_id is not None:
+            query_params['has_isolate_id'] = has_isolate_id
+
+        return make_request(f'/api/v1/samples', 'GET', query_params=query_params, *args, **kwargs)
     return _
 
 
