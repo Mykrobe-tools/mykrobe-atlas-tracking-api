@@ -1,4 +1,5 @@
 from hypothesis import given
+from hypothesis.strategies import lists
 
 from openapi_server.models import Sample
 from openapi_server.test.context_managers import managed_db
