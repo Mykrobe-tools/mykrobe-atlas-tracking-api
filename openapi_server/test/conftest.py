@@ -168,6 +168,13 @@ def get_sample(make_request):
 
 
 @fixture
+def patch_sample(make_request):
+    def _(sample_id, sample, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}', 'PATCH', json=sample, *args, **kwargs)
+    return _
+
+
+@fixture
 def get_resource(make_request):
     def _(uri, *args, **kwargs):
         return make_request(uri, 'GET', *args, **kwargs)

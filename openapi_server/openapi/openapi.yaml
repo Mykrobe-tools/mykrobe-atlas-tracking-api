@@ -145,6 +145,52 @@ paths:
       tags:
       - sample
       x-openapi-router-controller: openapi_server.controllers.sample_controller
+    patch:
+      description: Update a sample.
+      operationId: samples_id_patch
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          $ref: '#/components/schemas/SampleID'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sample'
+        description: New properties for this sample
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sample'
+          description: Updated
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: One or more of the unique properties lready existed
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample
+      x-openapi-router-controller: openapi_server.controllers.sample_controller
   /samples/{id}/events:
     get:
       description: Return a list of events associated with a sample.

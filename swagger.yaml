@@ -142,6 +142,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - sample
+      description: Update a sample.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SampleID'
+      requestBody:
+        description: New properties for this sample
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sample'
+      responses:
+        200:
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sample'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: One or more of the unique properties lready existed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /samples/{id}/files:
     get:
       tags:
