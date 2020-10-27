@@ -43,6 +43,42 @@ paths:
       - file
       x-openapi-router-controller: openapi_server.controllers.file_controller
   /samples:
+    get:
+      description: Return a list of samples based on filtering parameters.
+      operationId: samples_get
+      parameters:
+      - explode: true
+        in: query
+        name: experiment_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: isolate_id
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Sample'
+                type: array
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample
+      x-openapi-router-controller: openapi_server.controllers.sample_controller
     post:
       description: Add a new sample.
       operationId: samples_post
