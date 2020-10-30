@@ -7,6 +7,31 @@ from openapi_server.models import Sample
 from openapi_server.models.error import Error  # noqa: E501
 
 
+def samples_get(experiment_id=None, isolate_id=None):  # noqa: E501
+    """samples_get
+
+    Return a list of samples based on filtering parameters. # noqa: E501
+
+    :param experiment_id:
+    :type experiment_id: str
+    :param isolate_id:
+    :type isolate_id: str
+
+    :rtype: List[Sample]
+    """
+
+    filters = []
+
+    if experiment_id is not None:
+        filters.append(orm.Sample.experiment_id == experiment_id)  # noqa: E711
+    if isolate_id is not None:
+        filters.append(orm.Sample.isolate_id == isolate_id)  # noqa: E711
+
+    filtered = orm.Sample.query.filter(*filters)
+
+    return [x.to_model() for x in filtered.all()]
+
+
 def samples_id_get(id):  # noqa: E501
     """samples_id_get
 

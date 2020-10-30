@@ -1,11 +1,11 @@
 import random
 
+import pytest
 from hypothesis import given, assume
 
 from openapi_server.models import Sample
 from openapi_server.test.context_managers import managed_db
 from openapi_server.test.strategies import sample_ids, samples
-
 
 SAMPLE_PROPS = ['experiment_id', 'isolate_id']
 SAMPLE_UNIQUE_PROPS = ['experiment_id', 'isolate_id']
@@ -56,6 +56,93 @@ def test_creating_duplicated_samples(existed, duplicated_exp_id, duplicated_isol
 
         response = create_sample(duplicated_isolate_id)
         assert response.status_code == 409
+
+
+@given(sample_1=samples(), sample_2=samples())
+def test_listing_samples_by_experiment_id(sample_1, sample_2, list_samples, create_sample):
+    assume(sample_1.experiment_id != sample_2.experiment_id)
+
+    # TODO: This can be deleted once the unique constraint for experiment/isolate IDs is removed
+    assume(sample_1.isolate_id != sample_2.isolate_id)
+
+    with managed_db():
+        create_sample(sample_1, ensure=True, success_code=201)
+        create_sample(sample_2, ensure=True, success_code=201)
+
+        response = list_samples(experiment_id=sample_1.experiment_id)
+        retrieved = [Sample.from_dict(x) for x in response.json]
+        for x in retrieved:
+            x.id = None
+
+        assert response.status_code == 200
+        assert sample_1 in retrieved
+        assert sample_2 not in retrieved
+
+
+@given(sample_1=samples(), sample_2=samples())
+def test_listing_samples_by_isolate_id(sample_1, sample_2, list_samples, create_sample):
+    assume(sample_1.isolate_id != sample_2.isolate_id)
+
+    # TODO: This can be deleted once the unique constraint for experiment/isolate IDs is removed
+    assume(sample_1.experiment_id != sample_2.experiment_id)
+
+    with managed_db():
+        create_sample(sample_1, ensure=True, success_code=201)
+        create_sample(sample_2, ensure=True, success_code=201)
+
+        response = list_samples(isolate_id=sample_1.isolate_id)
+        retrieved = [Sample.from_dict(x) for x in response.json]
+        for x in retrieved:
+            x.id = None
+
+        assert response.status_code == 200
+        assert sample_1 in retrieved
+        assert sample_2 not in retrieved
+
+
+@pytest.mark.skip('current unique constraints make test construction impossible')
+@given(with_experiment_id=samples(), with_isolate_id=samples(), with_both=samples())
+def test_listing_samples_by_both_ids(with_experiment_id, with_isolate_id, with_both, list_samples, create_sample):
+    assume(with_experiment_id.isolate_id != with_isolate_id.isolate_id and
+           with_experiment_id.experiment_id != with_isolate_id.experiment_id)
+
+    with_both.experiment_id = with_experiment_id.experiment_id
+    with_both.isolate_id = with_isolate_id.isolate_id
+
+    with managed_db():
+        create_sample(with_experiment_id, ensure=True, success_code=201)
+        create_sample(with_isolate_id, ensure=True, success_code=201)
+        create_sample(with_both, ensure=True, success_code=201)
+
+        response = list_samples(isolate_id=with_isolate_id.isolate_id, experiment_id=with_experiment_id.experiment_id)
+        retrieved = [Sample.from_dict(x) for x in response.json]
+        for x in retrieved:
+            x.id = None
+
+        assert response.status_code == 200
+        assert with_experiment_id not in retrieved
+        assert with_isolate_id not in retrieved
+        assert with_both not in retrieved
+
+
+@given(sample_1=samples(), sample_2=samples())
+def test_listing_all_samples(sample_1, sample_2, list_samples, create_sample):
+    # TODO: This can be deleted once the unique constraint for experiment/isolate IDs is removed
+    assume(sample_1.isolate_id != sample_2.isolate_id)
+    assume(sample_1.experiment_id != sample_2.experiment_id)
+
+    with managed_db():
+        create_sample(sample_1, ensure=True, success_code=201)
+        create_sample(sample_2, ensure=True, success_code=201)
+
+        response = list_samples()
+        retrieved = [Sample.from_dict(x) for x in response.json]
+        for x in retrieved:
+            x.id = None
+
+        assert response.status_code == 200
+        assert sample_1 in retrieved
+        assert sample_2 in retrieved
 
 
 @given(sample_id=sample_ids())

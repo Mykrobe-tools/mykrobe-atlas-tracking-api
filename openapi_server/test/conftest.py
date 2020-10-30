@@ -26,8 +26,8 @@ def client(app):
 
 @fixture
 def make_request(client):
-    def _(path, method, json=None, ensure=False, success_code=200):
-        response = client.open(path=path, method=method, json=json)
+    def _(path, method, json=None, ensure=False, success_code=200, query_params=None):
+        response = client.open(path=path, method=method, json=json, query_string=query_params)
         if ensure:
             assert response.status_code == success_code, response.data.decode()
         return response
@@ -157,6 +157,17 @@ def delete_status(make_request):
 def create_sample(make_request):
     def _(sample, *args, **kwargs):
         return make_request(f'/api/v1/samples', 'POST', json=sample, *args, **kwargs)
+    return _
+
+
+@fixture
+def list_samples(make_request):
+    def _(experiment_id=None, isolate_id=None, *args, **kwargs):
+        return make_request(f'/api/v1/samples', 'GET', query_params={
+            'experiment_id': experiment_id,
+            'isolate_id': isolate_id,
+        }, *args, **kwargs)
+
     return _
 
 

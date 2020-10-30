@@ -57,6 +57,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - sample
+      description: Return a list of samples based on filtering parameters.
+      parameters:
+        - name: experiment_id
+          in: query
+          schema:
+            type: string
+        - name: isolate_id
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sample'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /files/{md5sum}:
     get:
       tags:
