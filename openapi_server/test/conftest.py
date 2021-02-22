@@ -219,5 +219,5 @@ def create_file():
     return _
 
 
-settings.register_profile('e2e', deadline=None, suppress_health_check=HealthCheck.function_scoped_fixture)
+settings.register_profile('e2e', deadline=None, suppress_health_check=[HealthCheck.function_scoped_fixture])
 settings.load_profile('e2e')

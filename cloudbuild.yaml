@@ -46,7 +46,7 @@ steps:
     entrypoint: "bash"
     args:
     - "-c"
-    - 'pip install -r requirements.txt && pip install -r test-requirements.txt && pip install . && SQLALCHEMY_DATABASE_URI=postgresql://postgres@testdb:5432 pytest'
+    - 'pip install -r requirements.txt && pip install -r test-requirements.txt && pip install . && SQLALCHEMY_DATABASE_URI=postgresql://postgres@testdb:5432 pytest openapi_server --hypothesis-profile=e2e'
   - name: gcr.io/cloud-builders/docker
     args: ['stop', 'testdb']
 
