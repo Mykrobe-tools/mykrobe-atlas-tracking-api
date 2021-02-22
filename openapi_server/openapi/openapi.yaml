@@ -856,7 +856,7 @@ components:
       type: object
     Event:
       example:
-        duration: 1
+        duration: 1.4658129805029452
         software-version: software-version
         start-time: 6.027456183070403
         software: software
@@ -882,8 +882,8 @@ components:
         start-time:
           type: number
         duration:
-          format: int32
-          type: integer
+          format: double
+          type: number
         command:
           type: string
       required:

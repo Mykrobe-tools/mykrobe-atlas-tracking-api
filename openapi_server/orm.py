@@ -31,7 +31,7 @@ class APIModelMixin:
 class Event(APIModelMixin, db.Model):
     id = Column(Integer, primary_key=True)
     command = Column(String)
-    duration = Column(Integer)
+    duration = Column(Float)
     name = Column(String)
     software = Column(String)
     software_version = Column(String)

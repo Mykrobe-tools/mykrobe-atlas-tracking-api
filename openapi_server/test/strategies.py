@@ -37,7 +37,7 @@ def events(draw, without_id=False):
     return Event(
         id=event_id,
         command=draw(safe_strings()),
-        duration=draw(int32s()),
+        duration=draw(floats()),
         name=draw(sampled_from(['de-contamination', 'QC', 'variant-calling', 'prediction', 'bigsi-building', 'distance-calculation'])),
         software=draw(safe_strings()),
         software_version=draw(safe_strings()),

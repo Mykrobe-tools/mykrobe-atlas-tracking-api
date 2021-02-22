@@ -781,8 +781,8 @@ components:
         start-time:
           type: number
         duration:
-          type: integer
-          format: int32
+          type: number
+          format: double
         command:
           type: string
     QcResult:

@@ -29,7 +29,7 @@ class Event(Model):
         :param start_time: The start_time of this Event.  # noqa: E501
         :type start_time: float
         :param duration: The duration of this Event.  # noqa: E501
-        :type duration: int
+        :type duration: float
         :param command: The command of this Event.  # noqa: E501
         :type command: str
         """
@@ -39,7 +39,7 @@ class Event(Model):
             'software': str,
             'software_version': str,
             'start_time': float,
-            'duration': int,
+            'duration': float,
             'command': str
         }
 
@@ -195,7 +195,7 @@ class Event(Model):
 
 
         :return: The duration of this Event.
-        :rtype: int
+        :rtype: float
         """
         return self._duration
 
@@ -205,7 +205,7 @@ class Event(Model):
 
 
         :param duration: The duration of this Event.
-        :type duration: int
+        :type duration: float
         """
         if duration is None:
             raise ValueError("Invalid value for `duration`, must not be `None`")  # noqa: E501

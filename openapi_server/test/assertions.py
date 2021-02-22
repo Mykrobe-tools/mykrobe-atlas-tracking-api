@@ -28,7 +28,7 @@ def assert_equal_events(a, b, compare_id=True):
     if compare_id:
         assert a.id == b.id
     assert a.command == b.command
-    assert a.duration == b.duration
+    assert_float_representations_equal(a.duration, b.duration)
     assert a.name == b.name
     assert a.software == b.software
     assert a.software_version == b.software_version
