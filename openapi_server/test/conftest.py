@@ -1,6 +1,6 @@
 import logging
 
-from hypothesis import settings
+from hypothesis import settings, HealthCheck
 from pytest import fixture
 
 from openapi_server.migrate import migrate
@@ -219,5 +219,5 @@ def create_file():
     return _
 
 
-settings.register_profile('e2e', deadline=None)
+settings.register_profile('e2e', deadline=None, suppress_health_check=HealthCheck.function_scoped_fixture)
 settings.load_profile('e2e')
