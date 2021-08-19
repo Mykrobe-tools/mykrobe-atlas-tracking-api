@@ -122,3 +122,24 @@ def samples_id_patch(id, new_sample=None):  # noqa: E501
         return Error(409, 'Already existed'), 409
     else:
         return old_sample.to_model(), 200
+
+
+def samples_id_delete(id):  # noqa: E501
+    """samples_id_delete
+
+    Delete a sample. # noqa: E501
+
+    :param id:
+    :type id:
+
+    :rtype: Sample
+    """
+
+    inst = orm.Sample.query.get(id)
+    if not inst:
+        return Error(404, 'Not found'), 404
+
+    db.session.delete(inst)
+    db.session.commit()
+
+    return inst.to_model(), 200

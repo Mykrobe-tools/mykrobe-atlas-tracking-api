@@ -209,3 +209,22 @@ def test_patching_samples(old_sample, new_sample, patch_sample, create_sample, g
 
         retrieved = Sample.from_dict(get_sample(created.id, ensure=True).json)
         assert retrieved == patched
+
+
+@given(sample_id=sample_ids())
+def test_deleting_non_existent_samples(sample_id, delete_sample):
+    response = delete_sample(sample_id)
+    assert response.status_code == 404
+
+
+@given(sample=samples())
+def test_deleting_samples(sample, create_sample, delete_sample):
+    with managed_db():
+        response = create_sample(sample)
+        created = Sample.from_dict(response.json)
+
+        response = delete_sample(created.id)
+        deleted = Sample.from_dict(response.json)
+
+        assert response.status_code == 200
+        assert deleted == created

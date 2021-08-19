@@ -202,11 +202,9 @@ def create_sample_in_db():
 
 
 @fixture
-def delete_sample():
-    def _(sample_id):
-        inst = Sample.query.get(sample_id)
-        db.session.delete(inst)
-        db.session.commit()
+def delete_sample(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}', 'DELETE', *args, **kwargs)
     return _
 
 
