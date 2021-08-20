@@ -11,3 +11,7 @@ setuptools >= 21.0.0
 
 Flask-SQLAlchemy == 2.4.3
 psycopg2-binary == 2.8.6
+
+openapi-spec-validator == 0.2.10
+click < 8.0
+Jinja2 < 3.0
