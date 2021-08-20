@@ -224,7 +224,5 @@ def test_deleting_samples(sample, create_sample, delete_sample):
         created = Sample.from_dict(response.json)
 
         response = delete_sample(created.id)
-        deleted = Sample.from_dict(response.json)
 
-        assert response.status_code == 200
-        assert deleted == created
+        assert response.status_code == 204

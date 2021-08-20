@@ -142,4 +142,4 @@ def samples_id_delete(id):  # noqa: E501
     db.session.delete(inst)
     db.session.commit()
 
-    return inst.to_model(), 200
+    return '', 204
