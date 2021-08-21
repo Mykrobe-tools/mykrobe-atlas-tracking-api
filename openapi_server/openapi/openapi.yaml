@@ -131,11 +131,7 @@ paths:
           $ref: '#/components/schemas/SampleID'
         style: simple
       responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sample'
+        "204":
           description: Deleted
         "404":
           content:
