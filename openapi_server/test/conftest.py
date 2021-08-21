@@ -1,6 +1,6 @@
 import logging
 
-from hypothesis import settings
+from hypothesis import settings, HealthCheck
 from pytest import fixture
 
 from openapi_server.migrate import migrate
@@ -202,11 +202,9 @@ def create_sample_in_db():
 
 
 @fixture
-def delete_sample():
-    def _(sample_id):
-        inst = Sample.query.get(sample_id)
-        db.session.delete(inst)
-        db.session.commit()
+def delete_sample(make_request):
+    def _(sample_id, *args, **kwargs):
+        return make_request(f'/api/v1/samples/{sample_id}', 'DELETE', *args, **kwargs)
     return _
 
 
@@ -219,5 +217,5 @@ def create_file():
     return _
 
 
-settings.register_profile('e2e', deadline=None)
+settings.register_profile('e2e', deadline=None, suppress_health_check=(HealthCheck.function_scoped_fixture,))
 settings.load_profile('e2e')

@@ -56,7 +56,7 @@ def call_endpoint(make_request):
     return _
 
 
-@settings(suppress_health_check=(HealthCheck.filter_too_much,))
+@settings(suppress_health_check=(HealthCheck.filter_too_much, HealthCheck.function_scoped_fixture))
 @given(sample_id=safe_strings(min_size=1))
 def test_invalid_sample_id(sample_id, call_endpoint):
     def is_uuid(s):

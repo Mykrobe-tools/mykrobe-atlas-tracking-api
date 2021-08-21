@@ -119,6 +119,35 @@ paths:
       - sample
       x-openapi-router-controller: openapi_server.controllers.sample_controller
   /samples/{id}:
+    delete:
+      description: Delete a sample.
+      operationId: samples_id_delete
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          $ref: '#/components/schemas/SampleID'
+        style: simple
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Unexpected error
+      tags:
+      - sample
+      x-openapi-router-controller: openapi_server.controllers.sample_controller
     get:
       description: Return a sample by its ID.
       operationId: samples_id_get
@@ -818,6 +847,7 @@ components:
     SampleID:
       format: uuid
       pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+      title: id
       type: string
     Sample:
       example:
@@ -826,13 +856,17 @@ components:
         experiment-id: experiment-id
       properties:
         experiment-id:
+          title: experiment-id
           type: string
         isolate-id:
+          title: isolate-id
           type: string
         id:
           format: uuid
           pattern: ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}$
+          title: id
           type: string
+      title: Sample
       type: object
     File:
       example:
@@ -841,18 +875,22 @@ components:
         md5sum: md5sum
       properties:
         md5sum:
+          title: md5sum
           type: string
         filename:
+          title: filename
           type: string
         file-type:
           enum:
           - fastq
           - vcf
+          title: file-type
           type: string
       required:
       - file-type
       - filename
       - md5sum
+      title: File
       type: object
     Event:
       example:
@@ -865,6 +903,7 @@ components:
         command: command
       properties:
         id:
+          title: id
           type: integer
         name:
           enum:
@@ -874,17 +913,23 @@ components:
           - prediction
           - bigsi-building
           - distance-calculation
+          title: name
           type: string
         software:
+          title: software
           type: string
         software-version:
+          title: software-version
           type: string
         start-time:
+          title: start-time
           type: number
         duration:
           format: int32
+          title: duration
           type: integer
         command:
+          title: command
           type: string
       required:
       - command
@@ -893,6 +938,7 @@ components:
       - software
       - software-version
       - start-time
+      title: Event
       type: object
     QcResult:
       example:
@@ -902,19 +948,23 @@ components:
       properties:
         coverage:
           format: float
+          title: coverage
           type: number
         number_of_het_snps:
           format: int32
+          title: number_of_het_snps
           type: integer
         decision:
           enum:
           - passed
           - failed
+          title: decision
           type: string
       required:
       - coverage
       - decision
       - number_of_het_snps
+      title: QcResult
       type: object
     Status:
       example:
@@ -932,6 +982,7 @@ components:
           - started
           - complete
           - failed
+          title: de-contamination
           type: string
         qc:
           enum:
@@ -939,6 +990,7 @@ components:
           - started
           - complete
           - failed
+          title: qc
           type: string
         variant-calling:
           enum:
@@ -946,6 +998,7 @@ components:
           - started
           - complete
           - failed
+          title: variant-calling
           type: string
         prediction:
           enum:
@@ -953,6 +1006,7 @@ components:
           - started
           - complete
           - failed
+          title: prediction
           type: string
         bigsi-building:
           enum:
@@ -960,6 +1014,7 @@ components:
           - started
           - complete
           - failed
+          title: bigsi-building
           type: string
         distance-calculation:
           enum:
@@ -967,6 +1022,7 @@ components:
           - started
           - complete
           - failed
+          title: distance-calculation
           type: string
         stage:
           enum:
@@ -974,6 +1030,7 @@ components:
           - qc-failed
           - live
           - deprecated
+          title: stage
           type: string
       required:
       - bigsi-building
@@ -982,15 +1039,19 @@ components:
       - prediction
       - qc
       - variant-calling
+      title: Status
       type: object
     Error:
       properties:
         code:
           format: int32
+          title: code
           type: integer
         message:
+          title: message
           type: string
       required:
       - code
       - message
+      title: Error
       type: object
